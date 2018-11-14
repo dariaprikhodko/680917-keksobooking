@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дарья Приходько](https://up.htmlacademy.ru/javascript/16/user/680917).
-* Наставник: `Неизвестно`.
+* Наставник: Виталий Усик (https://htmlacademy.ru/profile/id235226)
 
 ---
 
