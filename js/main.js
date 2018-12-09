@@ -5,7 +5,7 @@ var TYPE = ['palace', 'flat', 'house', 'bungalo'];
 var ROOMS = [1, 2, 3, 4, 5];
 var CHECK_TIME = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+// var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var AVATAR = [1, 2, 3, 4, 5, 6, 7, 8];
 
 // Вспомогательные функции по поиску случайных чисел
@@ -67,12 +67,12 @@ var similarPinTemplate = document.querySelector('#pin')
 
 // создаем DOM-элементы, соответствующие меткам на карте, и заполняем их данными из массива.
 
-var renderPin = function (ads) {
+var renderPin = function () {
   var pinElement = similarPinTemplate.cloneNode(true);
 
-  pinElement.querySelector(img.alt).textContent =  ;
-  pinElement.querySelector(img.src).textContent = ;
-  pinElement.querySelector(location).textContent = ;
+  pinElement.querySelector().textContent = '';
+  pinElement.querySelector().textContent = '';
+  pinElement.querySelector().textContent = '';
 
   return pinElement;
 };
