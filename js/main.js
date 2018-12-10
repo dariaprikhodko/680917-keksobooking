@@ -44,6 +44,10 @@ var generateAd = function () {
         features: getRandomNum(FEATURES),
         description: '',
         photos: getRandomNum(FEATURES)
+      },
+      location: {
+        x: getRandomAmount(1, 650),
+        y: getRandomAmount(130, 630)
       }
     });
   }
@@ -67,12 +71,12 @@ var similarPinTemplate = document.querySelector('#pin')
 
 // создаем DOM-элементы, соответствующие меткам на карте, и заполняем их данными из массива.
 
-var renderPin = function () {
+var renderPin = function (ads) {
   var pinElement = similarPinTemplate.cloneNode(true);
 
-  pinElement.querySelector().textContent = '';
-  pinElement.querySelector().textContent = '';
-  pinElement.querySelector().textContent = '';
+  pinElement.querySelector('.map__pin').style = 'left:' + ads.x + 'px;' + 'top:' + ads.y + 'px;';
+  pinElement.querySelector('.map__pin').src = ads.avatar;
+  pinElement.querySelector('.map__pin').alt = 'Заголовок объявления';
 
   return pinElement;
 };
@@ -115,22 +119,26 @@ var renderCard = function (ads) {
   return cardElement;
 };
 
-// В блок .popup__photos выведите все фотографии из списка offer.photos. Каждая из строк массива photos должна записываться как src соответствующего изображения.
-// Замените src у аватарки пользователя — изображения, которое записано в .popup__avatar — на значения поля author.avatar отрисовываемого объекта.
-
 // отрисовываем сгенерированные DOM-элементы в блок .map.
 
 // находим и выносим в переменную блок .map
 
 var similarCardElement = mapElement.querySelector('.map__card');
 
+// находим и выносим в переменную блок .map__filters-container, чтобы вставит карточки перед ним
+var filtersContainerElement = document.querySelector('.map__filters-container');
+
 var renderCards = function (ads) {
   var card = document.createDocumentFragment();
   for (var i = 0; i < ads.length; i++) {
     card.appendChild(renderCard(ads[i]));
   }
-  similarCardElement.appendChild(card);
+  similarCardElement.insertBefore(filtersContainerElement);
 };
+
+// Замените src у аватарки пользователя — изображения, которое записано в .popup__avatar — на значения поля author.avatar отрисовываемого объекта.
+
+// создаем обобщающую функцию
 
 var init = function (ads) {
   generateAd();
