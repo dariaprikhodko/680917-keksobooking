@@ -56,6 +56,16 @@ var getRandomAmount = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+// создаем функции для генерации Х и У
+
+var generateX = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+var generateY = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 // Создаем массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку.
 
 var generateAds = function () {
@@ -67,7 +77,7 @@ var generateAds = function () {
       },
       offer: {
         title: getRandomNum(TITLE),
-        address: '',
+        address: generateX(1, 650) + ',' + generateY(130, 630),
         price: getRandomAmount(1000, 1000000),
         type: getRandomNum(TYPE),
         rooms: getRandomNum(ROOMS),
@@ -79,8 +89,8 @@ var generateAds = function () {
         photos: getRandomNum(FEATURES)
       },
       location: {
-        x: getRandomAmount(1, 650),
-        y: getRandomAmount(130, 630)
+        x: generateX(1, 650),
+        y: generateY(130, 630)
       }
     });
   }
@@ -89,10 +99,10 @@ var generateAds = function () {
 
 // создаем DOM-элементы, соответствующие меткам на карте, и заполняем их данными из массива.
 
-var renderPin = function (ads) {
+var renderPin = function (ads, location) {
   var pinElement = similarPinTemplate.cloneNode(true);
 
-  pinElement.querySelector('.map__pin').style = 'left:' + ads.x + 'px;' + 'top:' + ads.y + 'px;';
+  pinElement.querySelector('.map__pin').style = 'left:' + location.x + 'px;' + 'top:' + location.y + 'px;';
   pinElement.querySelector('img').src = ads.avatar;
   pinElement.querySelector('img').alt = 'Заголовок объявления';
 
