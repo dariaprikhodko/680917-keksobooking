@@ -56,28 +56,27 @@ var getRandomAmount = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-// создаем функции для генерации Х и У
-
-var generateX = function (min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-var generateY = function (min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
 // Создаем массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку.
 
 var generateAds = function () {
   var ads = [];
   for (var i = 0; i < CARDS_AMOUNT; i++) {
+    var generateX = function (min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+    generateX(1, 650);
+
+    var generateY = function (min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+    generateY(130, 630);
     ads.push({
       author: {
         avatar: ('img/avatars/user' + '0' + getRandomNum(AVATAR) + '.png'),
       },
       offer: {
         title: getRandomNum(TITLE),
-        address: generateX(1, 650) + ',' + generateY(130, 630),
+        address: generateX + ',' + generateY,
         price: getRandomAmount(1000, 1000000),
         type: getRandomNum(TYPE),
         rooms: getRandomNum(ROOMS),
@@ -89,8 +88,8 @@ var generateAds = function () {
         photos: getRandomNum(FEATURES)
       },
       location: {
-        x: generateX(1, 650),
-        y: generateY(130, 630)
+        x: generateX,
+        y: generateY
       }
     });
   }
@@ -99,11 +98,12 @@ var generateAds = function () {
 
 // создаем DOM-элементы, соответствующие меткам на карте, и заполняем их данными из массива.
 
-var renderPin = function (ads, location) {
+var renderPin = function () {
   var pinElement = similarPinTemplate.cloneNode(true);
 
-  pinElement.querySelector('.map__pin').style = 'left:' + location.x + 'px;' + 'top:' + location.y + 'px;';
-  pinElement.querySelector('img').src = ads.avatar;
+  pinElement.style.left = location.x + 'px;';
+  pinElement.style.top = location.y + 'px;';
+  pinElement.querySelector('img').src = '';
   pinElement.querySelector('img').alt = 'Заголовок объявления';
 
   return pinElement;
@@ -152,11 +152,11 @@ var renderCards = function (ads) {
 // создаем обобщающую функцию
 
 var init = function () {
-  generateAds();
+  var cardList = generateAds();
   renderPin();
-  renderPins();
+  renderPins(cardList);
   renderCard();
-  renderCards();
+  renderCards(cardList);
 };
 
 init();
