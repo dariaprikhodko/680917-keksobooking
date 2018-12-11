@@ -1,7 +1,6 @@
 'use strict';
 
-var TITLE = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var TYPE = ['palace', 'flat', 'house', 'bungalo'];
+var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var ROOMS = [1, 2, 3, 4, 5];
 var CHECK_TIME = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -9,58 +8,56 @@ var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.g
 var AVATAR = [1, 2, 3, 4, 5, 6, 7, 8];
 var CARDS_AMOUNT = 8;
 
-// ищем на странице блок .map--faded
-// var mapElement = document.querySelector('.map--faded');
-
-// убираем класс .map--faded у блока map
-
-var showMapElement = function () {
-  showMapElement.classList.remove('.map--faded');
+var typesOfOffers = {
+  flat: 'Квартира',
+  bungalo: 'Бунгало',
+  house: 'Дом',
+  palace: 'Дворец'
 };
 
-// находим и выносим в переменную блок .map__card
+var keysTypes = Object.keys(typesOfOffers);
 
-// var similarCardElement = mapElement.querySelector('.map__card');
+// ищем на странице блок .map--faded
+var mapElement = document.querySelector('.map--faded');
+
+// убираем класс .map--faded у блока map
+var showMapElement = function () {
+  mapElement.classList.remove('.map--faded');
+};
 
 // находим и выносим в переменную блок .map__filters-container, чтобы вставит карточки перед ним
 var filtersContainerElement = document.querySelector('.map__filters-container');
 
 // находим и выносим в переменную блок .map
-var mapBlock = document.querySelector('.map');
+var mapBlockElement = document.querySelector('.map');
 
 
 // заполняем шаблон #card
-
 var similarCardTemplate = document.querySelector('#card')
     .content
     .querySelector('.map__card');
 
 // заполняем шаблон #pin
-
 var similarPinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
 
 // находим и выносим в переменную блок .map__pins
-var similarPinElement = document.querySelector('.map__pin');
+var similarPinElement = document.querySelector('.map__pins');
 
 // Вспомогательные функции по поиску случайных чисел
-
 // Ищет случайное число из массива
-
 var getRandomNum = function (array) {
   var index = Math.floor(Math.random() * array.length);
   return array[index];
 };
 
 // Ищет случайное число из заданного диапазона
-
 var getRandomAmount = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 // Создаем массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку.
-
 var generateAds = function () {
   var ads = [];
   for (var i = 0; i < CARDS_AMOUNT; i++) {
@@ -71,10 +68,10 @@ var generateAds = function () {
         avatar: ('img/avatars/user' + '0' + getRandomNum(AVATAR) + '.png'),
       },
       offer: {
-        title: getRandomNum(TITLE),
+        title: getRandomNum(TITLES),
         address: coordX + ', ' + coordY,
         price: getRandomAmount(1000, 1000000),
-        type: getRandomNum(TYPE),
+        type: getRandomNum(keysTypes),
         rooms: getRandomNum(ROOMS),
         guests: getRandomAmount(1, 20),
         checkin: getRandomNum(CHECK_TIME),
@@ -93,7 +90,6 @@ var generateAds = function () {
 };
 
 // создаем DOM-элементы, соответствующие меткам на карте, и заполняем их данными из массива.
-
 var renderPin = function (ad) {
   var pinElement = similarPinTemplate.cloneNode(true);
 
@@ -106,7 +102,6 @@ var renderPin = function (ad) {
 };
 
 // отрисовываем сгенерированные DOM-элементы в блок .map__pins.
-
 var renderPins = function (ads) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < ads.length; i++) {
@@ -116,7 +111,6 @@ var renderPins = function (ads) {
 };
 
 // создаем DOM-элементы объявлений
-
 var renderCard = function (ads) {
   var cardElement = similarCardTemplate.cloneNode(true);
 
@@ -135,12 +129,12 @@ var renderCard = function (ads) {
   }
   cardElement.querySelector('.popup__avatar').src = ads.author.avatar;
 
-  mapBlock.insertBefore(cardElement, filtersContainerElement);
+  mapBlockElement.insertBefore(cardElement, filtersContainerElement);
 };
 
 // создаем обобщающую функцию
-
 var init = function () {
+  showMapElement();
   var cardList = generateAds();
   renderPins(cardList);
   renderCard(cardList[0]);
