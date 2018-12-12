@@ -31,6 +31,9 @@ var filtersContainerElement = document.querySelector('.map__filters-container');
 // находим и выносим в переменную блок .map
 var mapBlockElement = document.querySelector('.map');
 
+var showMapBlockElement = function () {
+  mapBlockElement.classList.remove('.map--faded');
+};
 
 // заполняем шаблон #card
 var similarCardTemplate = document.querySelector('#card')
@@ -122,7 +125,7 @@ var renderCard = function (ads) {
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + ads.offer.checkin + ',' + ' выезд до ' + ads.offer.checkout;
   cardElement.querySelector('.popup__features').textContent = ads.offer.features;
   cardElement.querySelector('.popup__description').textContent = ads.offer.description;
-  cardElement.querySelector('.popup__type').textContent = ads.offer.type;
+  cardElement.querySelector('.popup__type').textContent = typesOfOffers[ads.offer.type];
   cardElement.querySelector('.popup__photos').textContent = '';
   for (var f = 0; f < ads.offer.photos.length; f++) {
     cardElement.querySelector('.popup__photos').insertAdjacentHTML('beforeend', '<img src="' + ads.offer.photos[f] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
@@ -135,6 +138,7 @@ var renderCard = function (ads) {
 // создаем обобщающую функцию
 var init = function () {
   showMapElement();
+  showMapBlockElement();
   var cardList = generateAds();
   renderPins(cardList);
   renderCard(cardList[0]);
