@@ -22,7 +22,7 @@ var mapElement = document.querySelector('.map--faded');
 
 // убираем класс .map--faded у блока map
 var showMapElement = function () {
-  mapElement.classList.remove('.map--faded');
+  mapElement.classList.remove('map--faded');
 };
 
 // находим и выносим в переменную блок .map__filters-container, чтобы вставит карточки перед ним
@@ -32,7 +32,7 @@ var filtersContainerElement = document.querySelector('.map__filters-container');
 var mapBlockElement = document.querySelector('.map');
 
 var showMapBlockElement = function () {
-  mapBlockElement.classList.remove('.map--faded');
+  mapBlockElement.classList.remove('map--faded');
 };
 
 // заполняем шаблон #card
