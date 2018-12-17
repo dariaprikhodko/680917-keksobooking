@@ -16,6 +16,8 @@ var typesOfOffers = {
 };
 
 var keysTypes = Object.keys(typesOfOffers);
+var mapPinMainElement = document.querySelector('.map__pin--main');
+var inputAddressElement = document.querySelector('#address');
 
 // находим и выносим в переменную блок .map__filters-container, чтобы вставит карточки перед ним
 var filtersContainerElement = document.querySelector('.map__filters-container');
@@ -123,15 +125,6 @@ var renderCard = function (ads) {
   mapBlockElement.insertBefore(cardElement, filtersContainerElement);
 };
 
-// создаем обобщающую функцию
-var init = function () {
-  var cardList = generateAds();
-  renderPins(cardList);
-  renderCard(cardList[0]);
-};
-
-init();
-
 // module4-task1
 // Форма заполнения информации об объявлении .ad-form содержит класс ad-form--disabled;
 var adFormElement = document.querySelector('.ad-form');
@@ -139,14 +132,14 @@ var disableAdFormElement = function () {
   adFormElement.classList.add('ad-form--disabled');
 };
 
-disableAdFormElement();
-
 // Все <input> и <select> формы .ad-form заблокированы с помощью атрибута disabled,
 // добавленного на них или на их родительские блоки fieldset.
 var fieldsetElement = adFormElement.getElementsByTagName('fieldset');
-for (var i = 0; i < fieldsetElement.length; i++) {
-  fieldsetElement[i].disabled = true;
-}
+var disableFieldsetElement = function () {
+  for (var i = 0; i < fieldsetElement.length; i++) {
+    fieldsetElement[i].disabled = true;
+  }
+};
 
 // Форма с фильтрами .map__filters заблокирована так же, как и форма .ad-form.
 var mapFiltersElement = document.querySelector('.map__filters');
@@ -154,34 +147,28 @@ var disablemapFiltersElement = function () {
   mapFiltersElement.classList.add('ad-form--disabled');
 };
 
-disablemapFiltersElement();
-
 // Все <input> и <select> формы .ad-form заблокированы с помощью атрибута disabled,
 // добавленного на них или на их родительские блоки fieldset.
 var selectElement = mapFiltersElement.getElementsByTagName('select');
-for (var j = 0; j < selectElement.length; j++) {
-  selectElement[j].disabled = true;
-}
+var disableSelectElement = function () {
+  for (var j = 0; j < selectElement.length; j++) {
+    selectElement[j].disabled = true;
+  }
+};
 
 var fieldsetMapFiltersElement = mapFiltersElement.getElementsByTagName('fieldset');
-for (var k = 0; k < fieldsetMapFiltersElement.length; k++) {
-  fieldsetMapFiltersElement[k].disabled = true;
-}
+var disableFieldsetMapFiltersElement = function () {
+  for (var k = 0; k < fieldsetMapFiltersElement.length; k++) {
+    fieldsetMapFiltersElement[k].disabled = true;
+  }
+};
 
 // активируем страницу
 // нужно добавить обработчик события mouseup на элемент .map__pin--main.
-var mapPinMainElement = document.querySelector('.map__pin--main');
-
 // Обработчик события mouseup должен вызывать функцию, которая будет отменять изменения DOM-элементов,
 // описанные в пункте «Неактивное состояние» технического задания.
-// ищем на странице блок .map--faded
-var mapElement = document.querySelector('.map--faded');
-
 // убираем класс .map--faded у блока map
 var showMapElement = function () {
-  mapElement.classList.remove('map--faded');
-};
-var showMapBlockElement = function () {
   mapBlockElement.classList.remove('map--faded');
 };
 
@@ -196,42 +183,66 @@ var makeActivemapFiltersElement = function () {
 };
 
 // Определяем координаты главного пина в неактивном состоянии
-var inputAddress = document.querySelector('#address');
 var calcCoordsToInputAdress = function () {
-// eslint-disable-next-line
-  inputAddress.value = parseInt(mapPinMainElement.style.left) + ', ' + parseInt(mapPinMainElement.style.top);
+  inputAddressElement.value = parseInt(mapPinMainElement.style.left, 10) + ', ' + parseInt(mapPinMainElement.style.top, 10);
+};
+
+// убираем установленные disabled у select и fieldset
+var setAbleFieldsetElement = function () {
+  for (var l = 0; l < fieldsetElement.length; l++) {
+    fieldsetElement[l].disabled = false;
+  }
+};
+
+var setAbleSelectElement = function () {
+  for (var m = 0; m < selectElement.length; m++) {
+    selectElement[m].disabled = false;
+  }
+};
+
+var setAbleFieldsetMapFiltersElement = function () {
+  for (var n = 0; n < fieldsetMapFiltersElement.length; n++) {
+    fieldsetMapFiltersElement[n].disabled = false;
+  }
 };
 
 var setActive = function () {
   showMapElement();
-  showMapBlockElement();
   makeActiveAdFormElement();
   makeActivemapFiltersElement();
-  // убираем установленные disabled у select и fieldset
-  var ableFieldsetElement = adFormElement.getElementsByTagName('fieldset');
-  for (var l = 0; l < ableFieldsetElement.length; l++) {
-    ableFieldsetElement[l].disabled = false;
-  }
-
-  var ableSelectElement = mapFiltersElement.getElementsByTagName('select');
-  for (var m = 0; m < ableSelectElement.length; m++) {
-    ableSelectElement[m].disabled = false;
-  }
-
-  var ableFieldsetMapFiltersElement = mapFiltersElement.getElementsByTagName('fieldset');
-  for (var n = 0; n < ableFieldsetMapFiltersElement.length; n++) {
-    ableFieldsetMapFiltersElement[n].disabled = false;
-  }
+  setAbleFieldsetElement();
+  setAbleSelectElement();
+  setAbleFieldsetMapFiltersElement();
   calcCoordsToInputAdress();
 };
 
 mapPinMainElement.addEventListener('mouseup', function () {
   setActive();
+  var cardList = generateAds();
+  renderPins(cardList);
+  renderCard(cardList[0]);
 });
+
+// создаем обобщающую функцию
+var init = function () {
+  disableAdFormElement();
+  disablemapFiltersElement();
+  disableFieldsetElement();
+  disableSelectElement();
+  disableFieldsetMapFiltersElement();
+};
+
+init();
 
 // Нажатие на метку похожего объявления на карте, приводит к показу карточки с подробной информацией об этом объявлении.
 // Получается, что для меток должны быть созданы обработчики событий, которые вызывают показ карточки с соответствующими данными.
 // добавляем обработчик событий на клик по пину
-similarPinElement.addEventListener('click', function () {
-
-});
+var mapPinElements = document.querySelectorAll('.map__pin');
+var clickPins = function () {
+  for (var p = 0; p < mapPinElements.length; p++) {
+    mapPinElements[p].addEventListener('click', function () {
+      renderCard();
+    });
+  }
+};
+clickPins();
