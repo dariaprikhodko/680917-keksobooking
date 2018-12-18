@@ -24,7 +24,6 @@ var fieldsetElement = adFormElement.querySelectorAll('fieldset');
 var mapFiltersElement = document.querySelector('.map__filters');
 var selectElement = mapFiltersElement.querySelectorAll('select');
 var fieldsetMapFiltersElement = mapFiltersElement.querySelectorAll('fieldset');
-var mapPinElements = document.querySelectorAll('.map__pin');
 
 // находим и выносим в переменную блок .map__filters-container, чтобы вставит карточки перед ним
 var filtersContainerElement = document.querySelector('.map__filters-container');
@@ -226,6 +225,7 @@ var setAbleFieldsetMapFiltersElement = function () {
 // Получается, что для меток должны быть созданы обработчики событий, которые вызывают показ карточки с соответствующими данными.
 // добавляем обработчик событий на клик по пину
 var clickPins = function (ads) {
+  var mapPinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
   for (var p = 0; p < mapPinElements.length; p++) {
     mapPinElements[p].addEventListener('click', function () {
       renderCard(ads[p]);
