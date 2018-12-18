@@ -7,6 +7,7 @@ var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditio
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var AVATAR = [1, 2, 3, 4, 5, 6, 7, 8];
 var CARDS_AMOUNT = 8;
+var ESC_KEYCODE = 27;
 
 var typesOfOffers = {
   flat: 'Квартира',
@@ -240,9 +241,29 @@ init();
 var mapPinElements = document.querySelectorAll('.map__pin');
 var clickPins = function () {
   for (var p = 0; p < mapPinElements.length; p++) {
+    var cardToShow = generateAds();
     mapPinElements[p].addEventListener('click', function () {
-      renderCard();
+      renderCard(cardToShow[p]);
     });
   }
 };
 clickPins();
+
+// Закрытие попапа по нажатию на крестик
+var mapCardElement = document.querySelector('.map__card');
+var mapCardCloseElement = document.querySelector('.popup__close');
+
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
+
+var closePopup = function () {
+  mapCardElement.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+mapCardCloseElement.addEventListener('click', function () {
+  closePopup();
+});
