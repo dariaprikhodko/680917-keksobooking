@@ -19,6 +19,12 @@ var typesOfOffers = {
 var keysTypes = Object.keys(typesOfOffers);
 var mapPinMainElement = document.querySelector('.map__pin--main');
 var inputAddressElement = document.querySelector('#address');
+var adFormElement = document.querySelector('.ad-form');
+var fieldsetElement = adFormElement.querySelectorAll('fieldset');
+var mapFiltersElement = document.querySelector('.map__filters');
+var selectElement = mapFiltersElement.querySelectorAll('select');
+var fieldsetMapFiltersElement = mapFiltersElement.querySelectorAll('fieldset');
+var mapPinElements = document.querySelectorAll('.map__pin');
 
 // находим и выносим в переменную блок .map__filters-container, чтобы вставит карточки перед ним
 var filtersContainerElement = document.querySelector('.map__filters-container');
@@ -128,14 +134,12 @@ var renderCard = function (ads) {
 
 // module4-task1
 // Форма заполнения информации об объявлении .ad-form содержит класс ad-form--disabled;
-var adFormElement = document.querySelector('.ad-form');
 var disableAdFormElement = function () {
   adFormElement.classList.add('ad-form--disabled');
 };
 
 // Все <input> и <select> формы .ad-form заблокированы с помощью атрибута disabled,
 // добавленного на них или на их родительские блоки fieldset.
-var fieldsetElement = adFormElement.getElementsByTagName('fieldset');
 var disableFieldsetElement = function () {
   for (var i = 0; i < fieldsetElement.length; i++) {
     fieldsetElement[i].disabled = true;
@@ -143,21 +147,18 @@ var disableFieldsetElement = function () {
 };
 
 // Форма с фильтрами .map__filters заблокирована так же, как и форма .ad-form.
-var mapFiltersElement = document.querySelector('.map__filters');
 var disablemapFiltersElement = function () {
   mapFiltersElement.classList.add('ad-form--disabled');
 };
 
 // Все <input> и <select> формы .ad-form заблокированы с помощью атрибута disabled,
 // добавленного на них или на их родительские блоки fieldset.
-var selectElement = mapFiltersElement.getElementsByTagName('select');
 var disableSelectElement = function () {
   for (var j = 0; j < selectElement.length; j++) {
     selectElement[j].disabled = true;
   }
 };
 
-var fieldsetMapFiltersElement = mapFiltersElement.getElementsByTagName('fieldset');
 var disableFieldsetMapFiltersElement = function () {
   for (var k = 0; k < fieldsetMapFiltersElement.length; k++) {
     fieldsetMapFiltersElement[k].disabled = true;
@@ -189,13 +190,13 @@ var calcCoordsToInputAdress = function () {
 };
 
 // убираем установленные disabled у select и fieldset
-var setAbleFieldsetElement = function () {
+var enableFieldsetElements = function () {
   for (var l = 0; l < fieldsetElement.length; l++) {
     fieldsetElement[l].disabled = false;
   }
 };
 
-var setAbleSelectElement = function () {
+var enableSelectElements = function () {
   for (var m = 0; m < selectElement.length; m++) {
     selectElement[m].disabled = false;
   }
@@ -207,12 +208,23 @@ var setAbleFieldsetMapFiltersElement = function () {
   }
 };
 
+// Нажатие на метку похожего объявления на карте, приводит к показу карточки с подробной информацией об этом объявлении.
+// Получается, что для меток должны быть созданы обработчики событий, которые вызывают показ карточки с соответствующими данными.
+// добавляем обработчик событий на клик по пину
+var clickPins = function (ads) {
+  for (var p = 0; p < mapPinElements.length; p++) {
+    mapPinElements[p].addEventListener('click', function () {
+      renderCard(ads[p]);
+    });
+  }
+};
+
 var setActive = function () {
   showMapElement();
   makeActiveAdFormElement();
   makeActivemapFiltersElement();
-  setAbleFieldsetElement();
-  setAbleSelectElement();
+  enableFieldsetElements();
+  enableSelectElements();
   setAbleFieldsetMapFiltersElement();
   calcCoordsToInputAdress();
 };
@@ -221,6 +233,7 @@ mapPinMainElement.addEventListener('mouseup', function () {
   setActive();
   var cardList = generateAds();
   renderPins(cardList);
+  clickPins();
   renderCard(cardList[0]);
 });
 
@@ -234,20 +247,6 @@ var init = function () {
 };
 
 init();
-
-// Нажатие на метку похожего объявления на карте, приводит к показу карточки с подробной информацией об этом объявлении.
-// Получается, что для меток должны быть созданы обработчики событий, которые вызывают показ карточки с соответствующими данными.
-// добавляем обработчик событий на клик по пину
-var mapPinElements = document.querySelectorAll('.map__pin');
-var clickPins = function () {
-  for (var p = 0; p < mapPinElements.length; p++) {
-    var cardToShow = generateAds();
-    mapPinElements[p].addEventListener('click', function () {
-      renderCard(cardToShow[p]);
-    });
-  }
-};
-clickPins();
 
 // Закрытие попапа по нажатию на крестик
 var mapCardElement = document.querySelector('.map__card');
