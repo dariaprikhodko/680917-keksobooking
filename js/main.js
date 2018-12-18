@@ -130,6 +130,20 @@ var renderCard = function (ads) {
   cardElement.querySelector('.popup__avatar').src = ads.author.avatar;
 
   mapBlockElement.insertBefore(cardElement, filtersContainerElement);
+
+  var closeButton = cardElement.querySelector('.popup__close');
+  closeButton.addEventListener('click', function () {
+    cardElement.classList.add('hidden');
+  });
+  closeButton.addEventListener('keydown', onPopupEscapePress);
+};
+
+// Закрытие попапа по нажатию на esc
+var onPopupEscapePress = function (evt) {
+  var cardElement = document.querySelector('.map__card');
+  if (evt.keyCode === ESC_KEYCODE) {
+    cardElement.classList.add('hidden');
+  }
 };
 
 // module4-task1
@@ -233,8 +247,7 @@ mapPinMainElement.addEventListener('mouseup', function () {
   setActive();
   var cardList = generateAds();
   renderPins(cardList);
-  clickPins();
-  renderCard(cardList[0]);
+  clickPins(cardList);
 });
 
 // создаем обобщающую функцию
@@ -247,22 +260,3 @@ var init = function () {
 };
 
 init();
-
-// Закрытие попапа по нажатию на крестик
-var mapCardElement = document.querySelector('.map__card');
-var mapCardCloseElement = document.querySelector('.popup__close');
-
-var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    closePopup();
-  }
-};
-
-var closePopup = function () {
-  mapCardElement.classList.add('hidden');
-  document.removeEventListener('keydown', onPopupEscPress);
-};
-
-mapCardCloseElement.addEventListener('click', function () {
-  closePopup();
-});
