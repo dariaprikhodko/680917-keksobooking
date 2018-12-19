@@ -20,10 +20,9 @@ var keysTypes = Object.keys(typesOfOffers);
 var mapPinMainElement = document.querySelector('.map__pin--main');
 var inputAddressElement = document.querySelector('#address');
 var adFormElement = document.querySelector('.ad-form');
-var fieldsetElement = adFormElement.querySelectorAll('fieldset');
+var fieldsetElement = document.querySelectorAll('fieldset');
 var mapFiltersElement = document.querySelector('.map__filters');
 var selectElement = mapFiltersElement.querySelectorAll('select');
-var fieldsetMapFiltersElement = mapFiltersElement.querySelectorAll('fieldset');
 
 // находим и выносим в переменную блок .map__filters-container, чтобы вставит карточки перед ним
 var filtersContainerElement = document.querySelector('.map__filters-container');
@@ -111,6 +110,11 @@ var renderPins = function (ads) {
 
 // создаем DOM-элементы объявлений
 var renderCard = function (ads) {
+  // проверяем, есть ли на странице открытое объявление, при наличии - удаляем
+  var existingCard = document.querySelector('.map__card');
+  if (existingCard) {
+    existingCard.remove();
+  }
   var cardElement = similarCardTemplate.cloneNode(true);
 
   cardElement.querySelector('.popup__title').textContent = ads.offer.title;
@@ -130,18 +134,21 @@ var renderCard = function (ads) {
 
   mapBlockElement.insertBefore(cardElement, filtersContainerElement);
 
+  // закрываем объявление по щелчку на крестик
   var closeButton = cardElement.querySelector('.popup__close');
   closeButton.addEventListener('click', function () {
-    cardElement.classList.add('hidden');
+    cardElement.remove();
+    document.removeEventListener('keydown', onPopupEscapePress);
   });
-  closeButton.addEventListener('keydown', onPopupEscapePress);
+  document.addEventListener('keydown', onPopupEscapePress);
 };
 
-// Закрытие попапа по нажатию на esc
+// Закрываем объявление по нажатию на esc
 var onPopupEscapePress = function (evt) {
   var cardElement = document.querySelector('.map__card');
   if (evt.keyCode === ESC_KEYCODE) {
-    cardElement.classList.add('hidden');
+    cardElement.remove();
+    document.removeEventListener('keydown', onPopupEscapePress);
   }
 };
 
@@ -172,16 +179,7 @@ var disableSelectElement = function () {
   }
 };
 
-var disableFieldsetMapFiltersElement = function () {
-  for (var k = 0; k < fieldsetMapFiltersElement.length; k++) {
-    fieldsetMapFiltersElement[k].disabled = true;
-  }
-};
-
 // активируем страницу
-// нужно добавить обработчик события mouseup на элемент .map__pin--main.
-// Обработчик события mouseup должен вызывать функцию, которая будет отменять изменения DOM-элементов,
-// описанные в пункте «Неактивное состояние» технического задания.
 // убираем класс .map--faded у блока map
 var showMapElement = function () {
   mapBlockElement.classList.remove('map--faded');
@@ -202,6 +200,11 @@ var calcCoordsToInputAdress = function () {
   inputAddressElement.value = parseInt(mapPinMainElement.style.left, 10) + ', ' + parseInt(mapPinMainElement.style.top, 10);
 };
 
+// добавляем полю адреса атрибут readonly для запрета ручного редактирования
+var setReadOnlyInput = function () {
+  inputAddressElement.setAttribute('readonly', true);
+};
+
 // убираем установленные disabled у select и fieldset
 var enableFieldsetElements = function () {
   for (var l = 0; l < fieldsetElement.length; l++) {
@@ -215,40 +218,45 @@ var enableSelectElements = function () {
   }
 };
 
-var setAbleFieldsetMapFiltersElement = function () {
-  for (var n = 0; n < fieldsetMapFiltersElement.length; n++) {
-    fieldsetMapFiltersElement[n].disabled = false;
-  }
-};
-
 // Нажатие на метку похожего объявления на карте, приводит к показу карточки с подробной информацией об этом объявлении.
 // Получается, что для меток должны быть созданы обработчики событий, которые вызывают показ карточки с соответствующими данными.
-// добавляем обработчик событий на клик по пину
+// функции subscribeClick передаем элемент, на который вешаем обработчик и сам объект объявления
+var subscribeClick = function (elem, ad) {
+  elem.addEventListener('click', function () {
+    renderCard(ad);
+  });
+};
+
+// функция clickPins выбирает DOM-элементы пинов, в цикле им передается обработчик событий вместе с объектом объявления
 var clickPins = function (ads) {
   var mapPinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
   for (var p = 0; p < mapPinElements.length; p++) {
-    mapPinElements[p].addEventListener('click', function () {
-      renderCard(ads[p]);
-    });
+    subscribeClick(mapPinElements[p], ads[p]);
   }
 };
 
+// обобщающая функция, содержащая в себе алгоритмы поведения элементов в активном состоянии
 var setActive = function () {
   showMapElement();
   makeActiveAdFormElement();
   makeActivemapFiltersElement();
   enableFieldsetElements();
   enableSelectElements();
-  setAbleFieldsetMapFiltersElement();
   calcCoordsToInputAdress();
+  setReadOnlyInput();
 };
 
-mapPinMainElement.addEventListener('mouseup', function () {
+// активация страницы по клику на главный пин
+var onMainPinClick = function () {
   setActive();
   var cardList = generateAds();
   renderPins(cardList);
   clickPins(cardList);
-});
+
+  mapPinMainElement.removeEventListener('click', onMainPinClick);
+};
+
+mapPinMainElement.addEventListener('click', onMainPinClick);
 
 // создаем обобщающую функцию
 var init = function () {
@@ -256,7 +264,6 @@ var init = function () {
   disablemapFiltersElement();
   disableFieldsetElement();
   disableSelectElement();
-  disableFieldsetMapFiltersElement();
 };
 
 init();
