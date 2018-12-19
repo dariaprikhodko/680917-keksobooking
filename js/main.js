@@ -7,6 +7,7 @@ var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditio
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var AVATAR = [1, 2, 3, 4, 5, 6, 7, 8];
 var CARDS_AMOUNT = 8;
+var ESC_KEYCODE = 27;
 
 var typesOfOffers = {
   flat: 'Квартира',
@@ -16,24 +17,18 @@ var typesOfOffers = {
 };
 
 var keysTypes = Object.keys(typesOfOffers);
-
-// ищем на странице блок .map--faded
-var mapElement = document.querySelector('.map--faded');
-
-// убираем класс .map--faded у блока map
-var showMapElement = function () {
-  mapElement.classList.remove('map--faded');
-};
+var mapPinMainElement = document.querySelector('.map__pin--main');
+var inputAddressElement = document.querySelector('#address');
+var adFormElement = document.querySelector('.ad-form');
+var fieldsetElement = document.querySelectorAll('fieldset');
+var mapFiltersElement = document.querySelector('.map__filters');
+var selectElement = mapFiltersElement.querySelectorAll('select');
 
 // находим и выносим в переменную блок .map__filters-container, чтобы вставит карточки перед ним
 var filtersContainerElement = document.querySelector('.map__filters-container');
 
 // находим и выносим в переменную блок .map
 var mapBlockElement = document.querySelector('.map');
-
-var showMapBlockElement = function () {
-  mapBlockElement.classList.remove('map--faded');
-};
 
 // заполняем шаблон #card
 var similarCardTemplate = document.querySelector('#card')
@@ -115,6 +110,11 @@ var renderPins = function (ads) {
 
 // создаем DOM-элементы объявлений
 var renderCard = function (ads) {
+  // проверяем, есть ли на странице открытое объявление, при наличии - удаляем
+  var existingCard = document.querySelector('.map__card');
+  if (existingCard) {
+    existingCard.remove();
+  }
   var cardElement = similarCardTemplate.cloneNode(true);
 
   cardElement.querySelector('.popup__title').textContent = ads.offer.title;
@@ -133,15 +133,137 @@ var renderCard = function (ads) {
   cardElement.querySelector('.popup__avatar').src = ads.author.avatar;
 
   mapBlockElement.insertBefore(cardElement, filtersContainerElement);
+
+  // закрываем объявление по щелчку на крестик
+  var closeButton = cardElement.querySelector('.popup__close');
+  closeButton.addEventListener('click', function () {
+    cardElement.remove();
+    document.removeEventListener('keydown', onPopupEscapePress);
+  });
+  document.addEventListener('keydown', onPopupEscapePress);
 };
+
+// Закрываем объявление по нажатию на esc
+var onPopupEscapePress = function (evt) {
+  var cardElement = document.querySelector('.map__card');
+  if (evt.keyCode === ESC_KEYCODE) {
+    cardElement.remove();
+    document.removeEventListener('keydown', onPopupEscapePress);
+  }
+};
+
+// module4-task1
+// Форма заполнения информации об объявлении .ad-form содержит класс ad-form--disabled;
+var disableAdFormElement = function () {
+  adFormElement.classList.add('ad-form--disabled');
+};
+
+// Все <input> и <select> формы .ad-form заблокированы с помощью атрибута disabled,
+// добавленного на них или на их родительские блоки fieldset.
+var disableFieldsetElement = function () {
+  for (var i = 0; i < fieldsetElement.length; i++) {
+    fieldsetElement[i].disabled = true;
+  }
+};
+
+// Форма с фильтрами .map__filters заблокирована так же, как и форма .ad-form.
+var disablemapFiltersElement = function () {
+  mapFiltersElement.classList.add('ad-form--disabled');
+};
+
+// Все <input> и <select> формы .ad-form заблокированы с помощью атрибута disabled,
+// добавленного на них или на их родительские блоки fieldset.
+var disableSelectElement = function () {
+  for (var j = 0; j < selectElement.length; j++) {
+    selectElement[j].disabled = true;
+  }
+};
+
+// активируем страницу
+// убираем класс .map--faded у блока map
+var showMapElement = function () {
+  mapBlockElement.classList.remove('map--faded');
+};
+
+// пишем функцию, которая убирает класс ad-form--disabled у блока .ad-form
+var makeActiveAdFormElement = function () {
+  adFormElement.classList.remove('ad-form--disabled');
+};
+
+// пишем функцию, которая убирает класс ad-form--disabled у блока .map__filters
+var makeActivemapFiltersElement = function () {
+  mapFiltersElement.classList.remove('ad-form--disabled');
+};
+
+// Определяем координаты главного пина в неактивном состоянии
+var calcCoordsToInputAdress = function () {
+  inputAddressElement.value = parseInt(mapPinMainElement.style.left, 10) + ', ' + parseInt(mapPinMainElement.style.top, 10);
+};
+
+// добавляем полю адреса атрибут readonly для запрета ручного редактирования
+var setReadOnlyInput = function () {
+  inputAddressElement.setAttribute('readonly', true);
+};
+
+// убираем установленные disabled у select и fieldset
+var enableFieldsetElements = function () {
+  for (var l = 0; l < fieldsetElement.length; l++) {
+    fieldsetElement[l].disabled = false;
+  }
+};
+
+var enableSelectElements = function () {
+  for (var m = 0; m < selectElement.length; m++) {
+    selectElement[m].disabled = false;
+  }
+};
+
+// Нажатие на метку похожего объявления на карте, приводит к показу карточки с подробной информацией об этом объявлении.
+// Получается, что для меток должны быть созданы обработчики событий, которые вызывают показ карточки с соответствующими данными.
+// функции subscribeClick передаем элемент, на который вешаем обработчик и сам объект объявления
+var subscribeClick = function (elem, ad) {
+  elem.addEventListener('click', function () {
+    renderCard(ad);
+  });
+};
+
+// функция clickPins выбирает DOM-элементы пинов, в цикле им передается обработчик событий вместе с объектом объявления
+var clickPins = function (ads) {
+  var mapPinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+  for (var p = 0; p < mapPinElements.length; p++) {
+    subscribeClick(mapPinElements[p], ads[p]);
+  }
+};
+
+// обобщающая функция, содержащая в себе алгоритмы поведения элементов в активном состоянии
+var setActive = function () {
+  showMapElement();
+  makeActiveAdFormElement();
+  makeActivemapFiltersElement();
+  enableFieldsetElements();
+  enableSelectElements();
+  calcCoordsToInputAdress();
+  setReadOnlyInput();
+};
+
+// активация страницы по клику на главный пин
+var onMainPinClick = function () {
+  setActive();
+  var cardList = generateAds();
+  renderPins(cardList);
+  clickPins(cardList);
+
+  mapPinMainElement.removeEventListener('click', onMainPinClick);
+};
+
+mapPinMainElement.addEventListener('click', onMainPinClick);
 
 // создаем обобщающую функцию
 var init = function () {
-  showMapElement();
-  showMapBlockElement();
-  var cardList = generateAds();
-  renderPins(cardList);
-  renderCard(cardList[0]);
+  disableAdFormElement();
+  disablemapFiltersElement();
+  disableFieldsetElement();
+  disableSelectElement();
 };
 
 init();
