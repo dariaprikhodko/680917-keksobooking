@@ -267,3 +267,169 @@ var init = function () {
 };
 
 init();
+
+// module4-task2
+var accommodationType = adFormElement.querySelector('#type');
+var priceField = adFormElement.querySelector('#price');
+var roomNumberField = adFormElement.querySelector('#room_number');
+var capacityField = adFormElement.querySelector('#capacity');
+var capacityOptions = Array.from(capacityField.options);
+var roomNumberOption = Array.from(roomNumberField.options);
+var checkInTime = adFormElement.querySelector('#timein');
+var checkOutTime = adFormElement.querySelector('#timeout');
+
+var PriceType = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 100000
+};
+
+// динамический селект типа жилья и цены
+function onHouseTypeChange() {
+  priceField.min = PriceType[accommodationType.value];
+  priceField.placeholder = PriceType[accommodationType.value];
+}
+onHouseTypeChange();
+
+accommodationType.addEventListener('change', onHouseTypeChange);
+
+// попытка написания функции, связывающей кол-во жильцов и комнат
+var checkRoomGuestsForOne = function () {
+  if (roomNumberOption[0].selected !== true) {
+    capacityOptions[0].disabled = true;
+    capacityOptions[1].disabled = true;
+    capacityOptions[3].disabled = true;
+  }
+};
+
+var checkRoomGuestsForTwo = function () {
+  if (roomNumberOption[1].selected !== true) {
+    capacityOptions[0].disabled = true;
+    capacityOptions[3].disabled = true;
+  }
+};
+
+var checkRoomGuestsForThree = function () {
+  if (roomNumberOption[2].selected !== true) {
+    capacityOptions[3].disabled = true;
+  }
+};
+
+var checkRoomGuestsForMore = function () {
+  if (roomNumberOption[3].selected !== true) {
+    capacityOptions[0].disabled = true;
+    capacityOptions[1].disabled = true;
+    capacityOptions[2].disabled = true;
+  }
+};
+
+checkRoomGuestsForOne();
+checkRoomGuestsForTwo();
+checkRoomGuestsForThree();
+checkRoomGuestsForMore();
+
+// время заезда и выезда
+var syncTimeOut = function () {
+  checkInTime.value = checkOutTime.value;
+};
+
+var syncTimeIn = function () {
+  checkOutTime.value = checkInTime.value;
+};
+
+syncTimeOut();
+syncTimeIn();
+
+checkInTime.addEventListener('change', syncTimeIn);
+checkOutTime.addEventListener('change', syncTimeOut);
+
+// подсветка невалидной формы
+var isInvalid = function (input) {
+  if (input.checkValidity() === false) {
+    input.style.boxShadow = '0 0 2px 2px red';
+  }
+};
+
+var isValid = function (input) {
+  if (input.checkValidity() === true) {
+    input.style.boxShadow = 'none';
+  }
+};
+
+// то, что надо подсветить
+adFormElement.querySelector('.ad-form__submit').addEventListener('click', function () {
+  isInvalid(adFormElement.querySelector('#title'));
+  isInvalid(adFormElement.querySelector('#price'));
+  isValid(adFormElement.querySelector('#title'));
+  isValid(adFormElement.querySelector('#price'));
+});
+
+// появление попапа об успешной публикации
+// находим шаблон и отрисовываем в него попап
+var mainElement = document.querySelector('main');
+var renderPopupSuccess = function () {
+  var successPopupTemplate = document.querySelector('#success')
+      .content
+      .querySelector('.success');
+  var successElement = successPopupTemplate.cloneNode(true);
+  mainElement.appendChild(successElement);
+};
+
+// функция показа попапа
+var successPopup = document.querySelector('.success');
+var showSuccessMessage = function () {
+  successPopup.classList.remove('hidden');
+  successPopup.addEventListener('click', function () {
+    successPopup.classList.add('hidden');
+    document.removeEventListener('keydown', onPopupEscapePress);
+  });
+};
+
+// вызов попапа
+adFormElement.addEventListener('submit', function (evt) {
+  renderPopupSuccess();
+  showSuccessMessage();
+  evt.preventDefault();
+  resetPage();
+});
+
+var closePopup = function () {
+  successPopup.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscapePress);
+};
+successPopup.addEventListener('click', closePopup);
+
+// появление попапа об ошибке
+// находим шаблон и отрисовываем в него попап
+var renderPopupError = function () {
+  var errorPopupTemplate = document.querySelector('#error')
+      .content
+      .querySelector('.error');
+  var errorElement = errorPopupTemplate.cloneNode(true);
+  mainElement.appendChild(errorElement);
+};
+
+// функция показа попапа
+var errorPopup = document.querySelector('.error');
+var showErrorMessage = function () {
+  errorPopup.classList.remove('hidden');
+  errorPopup.addEventListener('click', function () {
+    errorPopup.classList.add('hidden');
+    document.removeEventListener('keydown', onPopupEscapePress);
+  });
+};
+
+renderPopupError();
+showErrorMessage();
+
+// ресет страницы
+function resetPage() {
+  adFormElement.reset();
+  mapFiltersElement.reset();
+  onHouseTypeChange();
+  disableAdFormElement();
+  disablemapFiltersElement();
+  disableFieldsetElement();
+  disableSelectElement();
+}
