@@ -244,6 +244,9 @@ var setActive = function () {
   enableSelectElements();
   calcCoordsToInputAdress();
   setReadOnlyInput();
+  onHouseTypeChange();
+  syncTimeOut();
+  syncTimeIn();
 };
 
 // активация страницы по клику на главный пин
@@ -275,8 +278,9 @@ var roomNumberField = adFormElement.querySelector('#room_number');
 var capacityField = adFormElement.querySelector('#capacity');
 var capacityOptions = Array.from(capacityField.options);
 var roomNumberOption = Array.from(roomNumberField.options);
-var checkInTime = adFormElement.querySelector('#timein');
-var checkOutTime = adFormElement.querySelector('#timeout');
+var checkInTimeElement = adFormElement.querySelector('#timein');
+var checkOutTimeElement = adFormElement.querySelector('#timeout');
+var mainElement = document.querySelector('main');
 
 var PriceType = {
   bungalo: 0,
@@ -286,11 +290,10 @@ var PriceType = {
 };
 
 // динамический селект типа жилья и цены
-function onHouseTypeChange() {
+var onHouseTypeChange = function () {
   priceField.min = PriceType[accommodationType.value];
   priceField.placeholder = PriceType[accommodationType.value];
-}
-onHouseTypeChange();
+};
 
 accommodationType.addEventListener('change', onHouseTypeChange);
 
@@ -324,25 +327,22 @@ var checkRoomGuestsForMore = function () {
   }
 };
 
-checkRoomGuestsForOne();
-checkRoomGuestsForTwo();
-checkRoomGuestsForThree();
-checkRoomGuestsForMore();
+roomNumberField.addEventListener('change', checkRoomGuestsForOne);
+roomNumberField.addEventListener('change', checkRoomGuestsForTwo);
+roomNumberField.addEventListener('change', checkRoomGuestsForThree);
+roomNumberField.addEventListener('change', checkRoomGuestsForMore);
 
 // время заезда и выезда
 var syncTimeOut = function () {
-  checkInTime.value = checkOutTime.value;
+  checkInTimeElement.value = checkOutTimeElement.value;
 };
 
 var syncTimeIn = function () {
-  checkOutTime.value = checkInTime.value;
+  checkOutTimeElement.value = checkInTimeElement.value;
 };
 
-syncTimeOut();
-syncTimeIn();
-
-checkInTime.addEventListener('change', syncTimeIn);
-checkOutTime.addEventListener('change', syncTimeOut);
+checkInTimeElement.addEventListener('change', syncTimeIn);
+checkOutTimeElement.addEventListener('change', syncTimeOut);
 
 // подсветка невалидной формы
 var isInvalid = function (input) {
@@ -367,7 +367,6 @@ adFormElement.querySelector('.ad-form__submit').addEventListener('click', functi
 
 // появление попапа об успешной публикации
 // находим шаблон и отрисовываем в него попап
-var mainElement = document.querySelector('main');
 var renderPopupSuccess = function () {
   var successPopupTemplate = document.querySelector('#success')
       .content
@@ -424,7 +423,7 @@ renderPopupError();
 showErrorMessage();
 
 // ресет страницы
-function resetPage() {
+var resetPage = function () {
   adFormElement.reset();
   mapFiltersElement.reset();
   onHouseTypeChange();
@@ -432,4 +431,4 @@ function resetPage() {
   disablemapFiltersElement();
   disableFieldsetElement();
   disableSelectElement();
-}
+};
