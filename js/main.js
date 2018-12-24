@@ -297,6 +297,15 @@ var onHouseTypeChange = function () {
 
 accommodationType.addEventListener('change', onHouseTypeChange);
 
+// изначальные значения поля capacity
+var setDefaultGuest = function () {
+  capacityOptions[0].disabled = true;
+  capacityOptions[1].disabled = true;
+  capacityOptions[2].disabled = false;
+  capacityOptions[3].disabled = true;
+};
+setDefaultGuest();
+
 // функция, связывающая кол-во жильцов и комнат
 var checkRoomGuests = function (evt) {
   if (evt.target.value === '1') {
