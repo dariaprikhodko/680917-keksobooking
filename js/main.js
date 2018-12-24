@@ -277,10 +277,10 @@ var priceField = adFormElement.querySelector('#price');
 var roomNumberField = adFormElement.querySelector('#room_number');
 var capacityField = adFormElement.querySelector('#capacity');
 var capacityOptions = Array.from(capacityField.options);
-var roomNumberOption = Array.from(roomNumberField.options);
 var checkInTimeElement = adFormElement.querySelector('#timein');
 var checkOutTimeElement = adFormElement.querySelector('#timeout');
 var mainElement = document.querySelector('main');
+// var successPopup = document.querySelector('.success');
 
 var PriceType = {
   bungalo: 0,
@@ -297,40 +297,32 @@ var onHouseTypeChange = function () {
 
 accommodationType.addEventListener('change', onHouseTypeChange);
 
-// попытка написания функции, связывающей кол-во жильцов и комнат
-var checkRoomGuestsForOne = function () {
-  if (roomNumberOption[0].selected !== true) {
+// функция, связывающая кол-во жильцов и комнат
+var checkRoomGuests = function (evt) {
+  if (evt.target.value === '1') {
     capacityOptions[0].disabled = true;
     capacityOptions[1].disabled = true;
+    capacityOptions[2].disabled = false;
     capacityOptions[3].disabled = true;
-  }
-};
-
-var checkRoomGuestsForTwo = function () {
-  if (roomNumberOption[1].selected !== true) {
+  } else if (evt.target.value === '2') {
     capacityOptions[0].disabled = true;
+    capacityOptions[1].disabled = false;
+    capacityOptions[2].disabled = false;
     capacityOptions[3].disabled = true;
-  }
-};
-
-var checkRoomGuestsForThree = function () {
-  if (roomNumberOption[2].selected !== true) {
+  } else if (evt.target.value === '3') {
+    capacityOptions[0].disabled = false;
+    capacityOptions[1].disabled = false;
+    capacityOptions[2].disabled = false;
     capacityOptions[3].disabled = true;
-  }
-};
-
-var checkRoomGuestsForMore = function () {
-  if (roomNumberOption[3].selected !== true) {
+  } else if (evt.target.value === '100') {
     capacityOptions[0].disabled = true;
     capacityOptions[1].disabled = true;
     capacityOptions[2].disabled = true;
+    capacityOptions[3].disabled = false;
   }
 };
 
-roomNumberField.addEventListener('change', checkRoomGuestsForOne);
-roomNumberField.addEventListener('change', checkRoomGuestsForTwo);
-roomNumberField.addEventListener('change', checkRoomGuestsForThree);
-roomNumberField.addEventListener('change', checkRoomGuestsForMore);
+roomNumberField.addEventListener('change', checkRoomGuests);
 
 // время заезда и выезда
 var syncTimeOut = function () {
@@ -373,54 +365,23 @@ var renderPopupSuccess = function () {
       .querySelector('.success');
   var successElement = successPopupTemplate.cloneNode(true);
   mainElement.appendChild(successElement);
-};
-
-// функция показа попапа
-var successPopup = document.querySelector('.success');
-var showSuccessMessage = function () {
-  successPopup.classList.remove('hidden');
-  successPopup.addEventListener('click', function () {
-    successPopup.classList.add('hidden');
+  successElement.addEventListener('click', function () {
+    successElement.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscapePress);
+  });
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      successElement.classList.add('hidden');
+    }
   });
 };
 
 // вызов попапа
 adFormElement.addEventListener('submit', function (evt) {
   renderPopupSuccess();
-  showSuccessMessage();
   evt.preventDefault();
   resetPage();
 });
-
-var closePopup = function () {
-  successPopup.classList.add('hidden');
-  document.removeEventListener('keydown', onPopupEscapePress);
-};
-successPopup.addEventListener('click', closePopup);
-
-// появление попапа об ошибке
-// находим шаблон и отрисовываем в него попап
-var renderPopupError = function () {
-  var errorPopupTemplate = document.querySelector('#error')
-      .content
-      .querySelector('.error');
-  var errorElement = errorPopupTemplate.cloneNode(true);
-  mainElement.appendChild(errorElement);
-};
-
-// функция показа попапа
-var errorPopup = document.querySelector('.error');
-var showErrorMessage = function () {
-  errorPopup.classList.remove('hidden');
-  errorPopup.addEventListener('click', function () {
-    errorPopup.classList.add('hidden');
-    document.removeEventListener('keydown', onPopupEscapePress);
-  });
-};
-
-renderPopupError();
-showErrorMessage();
 
 // ресет страницы
 var resetPage = function () {
