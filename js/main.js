@@ -255,6 +255,7 @@ var onMainPinClick = function () {
   var cardList = generateAds();
   renderPins(cardList);
   clickPins(cardList);
+  setDefaultGuest();
 
   mapPinMainElement.removeEventListener('click', onMainPinClick);
 };
@@ -304,7 +305,6 @@ var setDefaultGuest = function () {
   capacityOptions[2].disabled = false;
   capacityOptions[3].disabled = true;
 };
-setDefaultGuest();
 
 // функция, связывающая кол-во жильцов и комнат
 var checkRoomGuests = function (evt) {
