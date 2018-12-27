@@ -249,18 +249,64 @@ var setActive = function () {
   syncTimeIn();
 };
 
-// активация страницы по клику на главный пин
-var onMainPinClick = function () {
-  setActive();
-  var cardList = generateAds();
-  renderPins(cardList);
-  clickPins(cardList);
-  setDefaultGuest();
+// пишем драг-н-дроп для метки
+// mapPinMainElement тот элемент, за который тащим и обработаем событие начала перетаскивания метки mousedown.
 
-  mapPinMainElement.removeEventListener('click', onMainPinClick);
-};
+mapPinMainElement.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
 
-mapPinMainElement.addEventListener('click', onMainPinClick);
+  // запомним координаты точки начала движения
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var dragged = false;
+  // При каждом движении мыши нам нужно обновлять смещение относительно
+  // первоначальной точки, чтобы диалог смещался на необходимую величину.
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragged = true;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    mapPinMainElement.style.top = (mapPinMainElement.offsetTop - shift.y) + 'px';
+    mapPinMainElement.style.left = (mapPinMainElement.offsetLeft - shift.x) + 'px';
+  };
+  // При отпускании кнопки мыши нужно переставать слушать события движения мыши.
+  // При отпускании мыши страница переходит в активный режим
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    setActive();
+    var cardList = generateAds();
+    renderPins(cardList);
+    clickPins(cardList);
+    setDefaultGuest();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    if (dragged) {
+      var onClickPreventDefault = function (dragEvt) {
+        dragEvt.preventDefault();
+        mapPinMainElement.removeEventListener('click', onClickPreventDefault);
+      };
+      mapPinMainElement.addEventListener('click', onClickPreventDefault);
+    }
+  };
+
+  // Добавим обработчики события передвижения мыши и отпускания кнопки мыши.
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
 
 // создаем обобщающую функцию
 var init = function () {
