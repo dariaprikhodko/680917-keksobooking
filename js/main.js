@@ -225,6 +225,7 @@ var subscribeClick = function (elem, ad) {
   elem.addEventListener('click', function () {
     renderCard(ad);
   });
+  elem.removeEventListener('click', renderCard);
 };
 
 // функция clickPins выбирает DOM-элементы пинов, в цикле им передается обработчик событий вместе с объектом объявления
