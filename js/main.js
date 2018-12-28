@@ -9,6 +9,19 @@ var AVATAR = [1, 2, 3, 4, 5, 6, 7, 8];
 var CARDS_AMOUNT = 8;
 var ESC_KEYCODE = 27;
 
+var MAIN_PIN_SIZE = 62;
+var MAIN_PIN_ARROW = 22;
+
+var MIN = {
+  X: 0,
+  Y: 80
+};
+
+var MAX = {
+  X: 1135,
+  Y: 630
+};
+
 var typesOfOffers = {
   flat: 'Квартира',
   bungalo: 'Бунгало',
@@ -225,7 +238,6 @@ var subscribeClick = function (elem, ad) {
   elem.addEventListener('click', function () {
     renderCard(ad);
   });
-  elem.removeEventListener('click', renderCard);
 };
 
 // функция clickPins выбирает DOM-элементы пинов, в цикле им передается обработчик событий вместе с объектом объявления
@@ -236,8 +248,11 @@ var clickPins = function (ads) {
   }
 };
 
+var isActive = false;
+
 // обобщающая функция, содержащая в себе алгоритмы поведения элементов в активном состоянии
 var setActive = function () {
+  isActive = true;
   showMapElement();
   makeActiveAdFormElement();
   makeActivemapFiltersElement();
@@ -252,6 +267,18 @@ var setActive = function () {
 
 // пишем драг-н-дроп для метки
 // mapPinMainElement тот элемент, за который тащим и обработаем событие начала перетаскивания метки mousedown.
+// функция, устанавающая границы
+var setBorders = function (min, max, current) {
+  if (current < min) {
+    var value = min + 'px';
+    return value;
+  }
+  if (current > max) {
+    value = max + 'px';
+    return value;
+  }
+  return value;
+};
 
 mapPinMainElement.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
@@ -281,16 +308,28 @@ mapPinMainElement.addEventListener('mousedown', function (evt) {
 
     mapPinMainElement.style.top = (mapPinMainElement.offsetTop - shift.y) + 'px';
     mapPinMainElement.style.left = (mapPinMainElement.offsetLeft - shift.x) + 'px';
+
+    // устанавливаем границы для перетаскивания метки по карте
+    mapPinMainElement.style.left = setBorders(MIN.X, MAX.X, parseInt(mapPinMainElement.style.left, 10));
+    mapPinMainElement.style.top = setBorders(MIN.Y, MAX.Y, parseInt(mapPinMainElement.style.top, 10));
+
+    // считаем координаты пина с учетом острой стрелочки
+    var calcCoordsByArrow = function (mainPinCoordsX, mainPinCoordsY) {
+      inputAddressElement.value = Math.floor(mainPinCoordsX + MAIN_PIN_SIZE / 2) + ', ' + Math.floor(mainPinCoordsY + MAIN_PIN_SIZE + MAIN_PIN_ARROW);
+    };
+    calcCoordsByArrow(startCoords.x, startCoords.y);
   };
   // При отпускании кнопки мыши нужно переставать слушать события движения мыши.
   // При отпускании мыши страница переходит в активный режим
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
-    setActive();
-    var cardList = generateAds();
-    renderPins(cardList);
-    clickPins(cardList);
-    setDefaultGuest();
+    if (!isActive) {
+      setActive();
+      var cardList = generateAds();
+      renderPins(cardList);
+      clickPins(cardList);
+      setDefaultGuest();
+    }
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
