@@ -313,9 +313,25 @@ mapPinMainElement.addEventListener('mousedown', function (evt) {
     mapPinMainElement.style.left = setBorders(MIN.X, MAX.X, parseInt(mapPinMainElement.style.left, 10));
     mapPinMainElement.style.top = setBorders(MIN.Y, MAX.Y, parseInt(mapPinMainElement.style.top, 10));
 
+    var left = mapPinMainElement.offsetLeft - shift.x;
+    if (left > MAX.X) {
+      left = MAX.X;
+    } else if (left <= MIN.X) {
+      left = MIN.X;
+    }
+
+    var top = mapPinMainElement.offsetTop - shift.y;
+    if (top > MAX.Y) {
+      top = MAX.Y;
+    } else if (top <= MIN.Y) {
+      top = MIN.Y;
+    }
+    var newCoordsX = left + MAIN_PIN_SIZE / 2;
+    var newCoordsY = top + (MAIN_PIN_SIZE + MAIN_PIN_ARROW);
+
     // считаем координаты пина с учетом острой стрелочки
-    var calcCoordsByArrow = function (mainPinCoordsX, mainPinCoordsY) {
-      inputAddressElement.value = Math.floor(mainPinCoordsX + MAIN_PIN_SIZE / 2) + ', ' + Math.floor(mainPinCoordsY + MAIN_PIN_SIZE + MAIN_PIN_ARROW);
+    var calcCoordsByArrow = function () {
+      inputAddressElement.value = Math.floor(newCoordsX) + ', ' + Math.floor(newCoordsY);
     };
     calcCoordsByArrow(startCoords.x, startCoords.y);
   };
