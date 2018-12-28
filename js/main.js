@@ -14,12 +14,12 @@ var MAIN_PIN_ARROW = 22;
 
 var MIN = {
   X: 0,
-  Y: 80
+  Y: 130 - (MAIN_PIN_SIZE + MAIN_PIN_ARROW)
 };
 
 var MAX = {
   X: 1135,
-  Y: 630
+  Y: 630 - (MAIN_PIN_SIZE + MAIN_PIN_ARROW)
 };
 
 var typesOfOffers = {
