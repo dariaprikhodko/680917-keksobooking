@@ -6,8 +6,6 @@
   var similarPinTemplate = document.querySelector('#pin')
       .content
       .querySelector('.map__pin');
-
-  // находим и выносим в переменную блок .map__pins
   var similarPinElement = document.querySelector('.map__pins');
 
   // создаем DOM-элементы, соответствующие меткам на карте, и заполняем их данными из массива.

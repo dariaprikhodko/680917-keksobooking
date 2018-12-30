@@ -15,8 +15,6 @@
     house: 'Дом',
     palace: 'Дворец'
   };
-
-  // находим и выносим в переменную блок .map__filters-container, чтобы вставит карточки перед ним
   var filtersContainerElement = document.querySelector('.map__filters-container');
   var keysTypes = Object.keys(typesOfOffers);
 

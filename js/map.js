@@ -14,6 +14,7 @@
   };
   var mainElement = document.querySelector('main');
   var mapPinMainElement = document.querySelector('.map__pin--main');
+  var isActive = false;
 
   // активируем страницу. убираем класс .map--faded у блока map
   var showMapElement = function () {
@@ -37,7 +38,6 @@
     }
   };
 
-  var isActive = false;
   // обобщающая функция, содержащая в себе алгоритмы поведения элементов в активном состоянии
   var setActive = function () {
     isActive = true;
@@ -124,33 +124,6 @@
       calcCoordsByArrow(startCoords.x, startCoords.y);
     };
 
-    var similarPinTemplate = document.querySelector('#pin')
-        .content
-        .querySelector('.map__pin');
-
-    // находим и выносим в переменную блок .map__pins
-    var similarPinElement = document.querySelector('.map__pins');
-
-    var renderPin = function (ad) {
-      var pinElement = similarPinTemplate.cloneNode(true);
-
-      pinElement.style.left = ad.location.x + 'px';
-      pinElement.style.top = ad.location.y + 'px';
-      pinElement.querySelector('img').src = ad.author.avatar;
-      pinElement.querySelector('img').alt = 'Заголовок объявления';
-
-      return pinElement;
-    };
-
-    // отрисовываем сгенерированные DOM-элементы в блок .map__pins.
-    var renderPins = function (ads) {
-      var fragment = document.createDocumentFragment();
-      for (var i = 0; i < ads.length; i++) {
-        fragment.appendChild(renderPin(ads[i]));
-      }
-      similarPinElement.appendChild(fragment);
-    };
-
     // При отпускании кнопки мыши нужно переставать слушать события движения мыши.
     // При отпускании мыши страница переходит в активный режим
     var onMouseUp = function (upEvt) {
@@ -158,7 +131,7 @@
       if (!isActive) {
         setActive();
         var cardList = window.card.generateAds();
-        renderPins(cardList);
+        window.pin.renderPins(cardList);
         clickPins(cardList);
         window.form.setDefaultGuest();
       }

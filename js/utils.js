@@ -21,8 +21,7 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     },
     ESC_KEYCODE: ESC_KEYCODE,
-    mapBlockElement: mapBlockElement,
-
+    mapBlockElement: mapBlockElement
   };
 
 })();

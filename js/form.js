@@ -3,8 +3,21 @@
 (function () {
   var inputAddressElement = document.querySelector('#address');
   var adFormElement = document.querySelector('.ad-form');
+  var accommodationType = adFormElement.querySelector('#type');
+  var priceField = adFormElement.querySelector('#price');
+  var roomNumberField = adFormElement.querySelector('#room_number');
+  var capacityField = adFormElement.querySelector('#capacity');
+  var capacityOptions = Array.from(capacityField.options);
+  var checkInTimeElement = adFormElement.querySelector('#timein');
+  var checkOutTimeElement = adFormElement.querySelector('#timeout');
 
-  // module4-task1
+  var PriceType = {
+    bungalo: 0,
+    flat: 1000,
+    house: 5000,
+    palace: 100000
+  };
+
   // Форма заполнения информации об объявлении .ad-form содержит класс ad-form--disabled;
   var disableAdFormElement = function () {
     adFormElement.classList.add('ad-form--disabled');
@@ -23,23 +36,6 @@
   // добавляем полю адреса атрибут readonly для запрета ручного редактирования
   var setReadOnlyInput = function () {
     inputAddressElement.setAttribute('readonly', true);
-  };
-
-  // module4-task2
-  var accommodationType = adFormElement.querySelector('#type');
-  var priceField = adFormElement.querySelector('#price');
-  var roomNumberField = adFormElement.querySelector('#room_number');
-  var capacityField = adFormElement.querySelector('#capacity');
-  var capacityOptions = Array.from(capacityField.options);
-  var checkInTimeElement = adFormElement.querySelector('#timein');
-  var checkOutTimeElement = adFormElement.querySelector('#timeout');
-  // var successPopup = document.querySelector('.success');
-
-  var PriceType = {
-    bungalo: 0,
-    flat: 1000,
-    house: 5000,
-    palace: 100000
   };
 
   // динамический селект типа жилья и цены
