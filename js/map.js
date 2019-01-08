@@ -124,15 +124,23 @@
       calcCoordsByArrow(startCoords.x, startCoords.y);
     };
 
+    var successHandler = function (ads) {
+      var fragment = document.createDocumentFragment();
+
+      for (var i = 0; i < 8; i++) {
+        fragment.appendChild(window.pin.renderPin(ads[i]));
+      }
+      window.pin.similarPinElement.appendChild(fragment);
+    };
+
     // При отпускании кнопки мыши нужно переставать слушать события движения мыши.
     // При отпускании мыши страница переходит в активный режим
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
       if (!isActive) {
         setActive();
-        var cardList = window.card.generateAds();
-        window.pin.renderPins(cardList);
-        clickPins(cardList);
+        window.backend.load(successHandler, window.error.showError);
+        clickPins();
         window.form.setDefaultGuest();
       }
 
