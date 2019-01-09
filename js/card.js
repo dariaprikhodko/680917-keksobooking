@@ -101,7 +101,8 @@
 
   window.card = {
     generateAds: generateAds,
-    renderCard: renderCard
+    renderCard: renderCard,
+    similarCardTemplate: similarCardTemplate
   };
 
 

@@ -139,7 +139,14 @@
       clickPins(ads);
     };
 
-    window.backend.load(successHandler, window.error.showError);
+    var checkCards = function () {
+      var cardElement = window.card.similarCardTemplate.cloneNode(true);
+      if (cardElement.querySelector('.popup__title').textContent !== '') {
+        cardElement.querySelector('.popup__title').remove();
+      } else if (cardElement.querySelector('..popup__text--address').textContent !== '') {
+        cardElement.querySelector('.popup__text--address').remove();
+      }
+    };
 
     // При отпускании кнопки мыши нужно переставать слушать события движения мыши.
     // При отпускании мыши страница переходит в активный режим
@@ -148,6 +155,7 @@
       if (!isActive) {
         setActive();
         window.backend.load(successHandler, window.error.showError);
+        checkCards();
         window.form.setDefaultGuest();
       }
 
