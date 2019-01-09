@@ -1,6 +1,12 @@
 'use strict';
 
 (function () {
+  var mainElement = document.querySelector('.main');
+  var errorPopupTemplate = document.querySelector('#error')
+      .content
+      .querySelector('.error');
+  var errorElement = errorPopupTemplate.cloneNode(true);
+  mainElement.appendChild(errorElement);
   var errorWindow = document.querySelector('.error');
   var errorText = errorWindow.querySelector('.error-message');
   var addHidden = function () {
