@@ -20,17 +20,7 @@
     return pinElement;
   };
 
-  // отрисовываем сгенерированные DOM-элементы в блок .map__pins.
-  // var renderPins = function (ads) {
-  // var fragment = document.createDocumentFragment();
-  // for (var i = 0; i < ads.length; i++) {
-  // fragment.appendChild(renderPin(ads[i]));
-  // }
-  // similarPinElement.appendChild(fragment);
-  // };
-
   window.pin = {
-    // renderPins: renderPins
     similarPinElement: similarPinElement,
     renderPin: renderPin
   };

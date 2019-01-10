@@ -12,7 +12,7 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  window.error = {
+  window.showError = {
     showError: showError
   };
 })();
