@@ -176,6 +176,15 @@
 
   init();
 
+  // Фильтрация объявлений
+  var onFilterChange = function () {
+    // window.map.closeCard();
+    // window.pin.resetMapPin();
+    window.filter.filterAllAds(window.adverts.slice(0, PINS_AMOUNT));
+  };
+
+  window.filter.mapFiltersElement.addEventListener('change', window.utils.debounce(onFilterChange));
+
   // появление попапа об успешной публикации
   // находим шаблон и отрисовываем в него попап
   var renderPopupSuccess = function () {
