@@ -12,6 +12,7 @@
     X: 1135,
     Y: 630 - (MAIN_PIN_SIZE + MAIN_PIN_ARROW)
   };
+  var PINS_AMOUNT = 8;
   var mainElement = document.querySelector('main');
   var mapPinMainElement = document.querySelector('.map__pin--main');
   var isActive = false;
@@ -124,15 +125,27 @@
       calcCoordsByArrow(startCoords.x, startCoords.y);
     };
 
+    var renderPins = function (ads) {
+      var fragment = document.createDocumentFragment();
+
+      for (var i = 0; i < PINS_AMOUNT; i++) {
+        fragment.appendChild(window.pin.renderPin(ads[i]));
+      }
+      window.pin.similarPinElement.appendChild(fragment);
+    };
+
+    var successHandler = function (ads) {
+      renderPins(ads);
+      clickPins(ads);
+    };
+
     // При отпускании кнопки мыши нужно переставать слушать события движения мыши.
     // При отпускании мыши страница переходит в активный режим
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
       if (!isActive) {
         setActive();
-        var cardList = window.card.generateAds();
-        window.pin.renderPins(cardList);
-        clickPins(cardList);
+        window.backend.load(successHandler, window.showError);
         window.form.setDefaultGuest();
       }
 

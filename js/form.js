@@ -10,6 +10,7 @@
   var capacityOptions = Array.from(capacityField.options);
   var checkInTimeElement = adFormElement.querySelector('#timein');
   var checkOutTimeElement = adFormElement.querySelector('#timeout');
+  var successElement = document.querySelector('.success');
 
   var PriceType = {
     bungalo: 0,
@@ -112,6 +113,38 @@
     isInvalid(adFormElement.querySelector('#price'));
     isValid(adFormElement.querySelector('#title'));
     isValid(adFormElement.querySelector('#price'));
+  });
+
+  var resetAll = function () {
+    window.form.adFormElement.reset();
+    window.filter.mapFiltersElement.reset();
+  };
+
+  var makeSelected = function (element) {
+    element.options[0].disabled = false;
+    element.options[0].selected = true;
+    element.options[0].disabled = true;
+  };
+
+  var onSuccessClose = function (evtDown) {
+    window.util.isEscEvent(evtDown, function () {
+      successElement.classList.add('hidden');
+      document.removeEventListener('keydown', onSuccessClose);
+    });
+  };
+
+  adFormElement.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(adFormElement), function () {
+      successElement.classList.remove('hidden');
+      resetAll();
+
+      adFormElement.querySelector('#description').value = '';
+      makeSelected(roomNumberField);
+      makeSelected(capacityField);
+
+      document.addEventListener('keydown', onSuccessClose);
+    }, window.showError);
+    evt.preventDefault();
   });
 
   window.form = {
