@@ -12,7 +12,7 @@
     X: 1135,
     Y: 630 - (MAIN_PIN_SIZE + MAIN_PIN_ARROW)
   };
-  var PINS_AMOUNT = 8;
+  var PINS_AMOUNT = 5;
   var mainElement = document.querySelector('main');
   var mapPinMainElement = document.querySelector('.map__pin--main');
   var isActive = false;
@@ -66,6 +66,17 @@
       return value;
     }
     return value;
+  };
+
+  var renderPins = function (ads) {
+    var fragment = document.createDocumentFragment();
+    var length = ads.length > PINS_AMOUNT ? PINS_AMOUNT : ads.length;
+
+    for (var i = 0; i < length; i++) {
+      fragment.appendChild(window.pin.renderPin(ads[i]));
+    }
+
+    window.pin.similarPinElement.appendChild(fragment);
   };
 
   // mapPinMainElement тот элемент, за который тащим и обработаем событие начала перетаскивания метки mousedown
@@ -125,16 +136,8 @@
       calcCoordsByArrow(startCoords.x, startCoords.y);
     };
 
-    var renderPins = function (ads) {
-      var fragment = document.createDocumentFragment();
-
-      for (var i = 0; i < PINS_AMOUNT; i++) {
-        fragment.appendChild(window.pin.renderPin(ads[i]));
-      }
-      window.pin.similarPinElement.appendChild(fragment);
-    };
-
     var successHandler = function (ads) {
+      window.adverts = ads;
       renderPins(ads);
       clickPins(ads);
     };
@@ -176,6 +179,13 @@
 
   init();
 
+  // Фильтрация объявлений
+  var onFilterChange = function () {
+    window.filter.filterAllAds(window.adverts.slice(0, PINS_AMOUNT));
+  };
+
+  window.filter.mapFiltersElement.addEventListener('change', window.util.debounce(onFilterChange));
+
   // появление попапа об успешной публикации
   // находим шаблон и отрисовываем в него попап
   var renderPopupSuccess = function () {
@@ -186,7 +196,7 @@
     mainElement.appendChild(successElement);
     successElement.addEventListener('click', function () {
       successElement.classList.add('hidden');
-      document.removeEventListener('keydown', window.utils.isEscEvent);
+      document.removeEventListener('keydown', window.util.isEscEvent);
     });
     document.addEventListener('keydown', function (evt) {
       var closePopup = function () {
@@ -215,7 +225,9 @@
   };
 
   window.map = {
-    mapPinMainElement: mapPinMainElement
+    renderPins: renderPins,
+    mapPinMainElement: mapPinMainElement,
+    clickPins: clickPins
   };
 
 })();
