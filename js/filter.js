@@ -71,10 +71,10 @@
     }
 
     // Отрисовка отфильтрованных объявлений
+    window.pin.removePins();
+
     if (filteredOffer.length) {
-      filteredOffer.forEach(function (item) { // из полученного массива
-        window.pin.renderMapPin(item);
-      });
+      window.map.renderPins(filteredOffer);
     }
   };
 
@@ -125,9 +125,7 @@
     enableFieldsetElements: enableFieldsetElements,
     enableSelectElements: enableSelectElements,
     mapFiltersElement: mapFiltersElement,
-    filterAllAds: function (offer) {
-      filterAllAds(offer);
-    }
+    filterAllAds: filterAllAds
   };
 
 })();

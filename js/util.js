@@ -3,9 +3,8 @@
 (function () {
 
   var ESC_KEYCODE = 27;
-  var mapBlockElement = document.querySelector('.map');
-
   var DEBOUNCE_INTERVAL = 300;
+  var mapBlockElement = document.querySelector('.map');
 
   var debounce = function (fun) {
     var lastTimeout = null;

@@ -68,6 +68,15 @@
     return value;
   };
 
+  var renderPins = function (ads) {
+    var fragment = document.createDocumentFragment();
+
+    for (var i = 0; i < PINS_AMOUNT; i++) {
+      fragment.appendChild(window.pin.renderPin(ads[i]));
+    }
+    window.pin.similarPinElement.appendChild(fragment);
+  };
+
   // mapPinMainElement тот элемент, за который тащим и обработаем событие начала перетаскивания метки mousedown
   mapPinMainElement.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -125,16 +134,8 @@
       calcCoordsByArrow(startCoords.x, startCoords.y);
     };
 
-    var renderPins = function (ads) {
-      var fragment = document.createDocumentFragment();
-
-      for (var i = 0; i < PINS_AMOUNT; i++) {
-        fragment.appendChild(window.pin.renderPin(ads[i]));
-      }
-      window.pin.similarPinElement.appendChild(fragment);
-    };
-
     var successHandler = function (ads) {
+      window.adverts = ads;
       renderPins(ads);
       clickPins(ads);
     };
@@ -183,7 +184,7 @@
     window.filter.filterAllAds(window.adverts.slice(0, PINS_AMOUNT));
   };
 
-  window.filter.mapFiltersElement.addEventListener('change', window.utils.debounce(onFilterChange));
+  window.filter.mapFiltersElement.addEventListener('change', window.util.debounce(onFilterChange));
 
   // появление попапа об успешной публикации
   // находим шаблон и отрисовываем в него попап
@@ -195,7 +196,7 @@
     mainElement.appendChild(successElement);
     successElement.addEventListener('click', function () {
       successElement.classList.add('hidden');
-      document.removeEventListener('keydown', window.utils.isEscEvent);
+      document.removeEventListener('keydown', window.util.isEscEvent);
     });
     document.addEventListener('keydown', function (evt) {
       var closePopup = function () {
@@ -224,6 +225,7 @@
   };
 
   window.map = {
+    renderPins: renderPins,
     mapPinMainElement: mapPinMainElement
   };
 
