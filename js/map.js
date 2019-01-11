@@ -74,6 +74,12 @@
     for (var i = 0; i < PINS_AMOUNT; i++) {
       fragment.appendChild(window.pin.renderPin(ads[i]));
     }
+    var length = ads.length > PINS_AMOUNT ? PINS_AMOUNT : ads.length;
+
+    for (var j = 0; j < length; j++) {
+      fragment.appendChild(window.pin.renderPin(ads[i]));
+    }
+
     window.pin.similarPinElement.appendChild(fragment);
   };
 
