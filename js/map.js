@@ -70,13 +70,9 @@
 
   var renderPins = function (ads) {
     var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < PINS_AMOUNT; i++) {
-      fragment.appendChild(window.pin.renderPin(ads[i]));
-    }
     var length = ads.length > PINS_AMOUNT ? PINS_AMOUNT : ads.length;
 
-    for (var j = 0; j < length; j++) {
+    for (var i = 0; i < length; i++) {
       fragment.appendChild(window.pin.renderPin(ads[i]));
     }
 
