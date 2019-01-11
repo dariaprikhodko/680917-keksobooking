@@ -12,7 +12,7 @@
     X: 1135,
     Y: 630 - (MAIN_PIN_SIZE + MAIN_PIN_ARROW)
   };
-  var PINS_AMOUNT = 8;
+  var PINS_AMOUNT = 5;
   var mainElement = document.querySelector('main');
   var mapPinMainElement = document.querySelector('.map__pin--main');
   var isActive = false;
@@ -181,8 +181,6 @@
 
   // Фильтрация объявлений
   var onFilterChange = function () {
-    // window.map.closeCard();
-    // window.pin.resetMapPin();
     window.filter.filterAllAds(window.adverts.slice(0, PINS_AMOUNT));
   };
 
@@ -228,7 +226,8 @@
 
   window.map = {
     renderPins: renderPins,
-    mapPinMainElement: mapPinMainElement
+    mapPinMainElement: mapPinMainElement,
+    clickPins: clickPins
   };
 
 })();

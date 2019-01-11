@@ -75,6 +75,7 @@
 
     if (filteredOffer.length) {
       window.map.renderPins(filteredOffer);
+      window.map.clickPins(filteredOffer);
     }
   };
 
