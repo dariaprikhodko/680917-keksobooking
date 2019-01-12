@@ -4,6 +4,8 @@
 
   var MAIN_PIN_SIZE = 62;
   var MAIN_PIN_ARROW = 22;
+  var MAIN_PIN_TOP = 375;
+  var MAIN_PIN_LEFT = 570;
   var MIN = {
     X: 0,
     Y: 130 - (MAIN_PIN_SIZE + MAIN_PIN_ARROW)
@@ -178,6 +180,28 @@
 
   init();
 
+  // Закрытие карточки предложения
+  var closeCard = function () {
+    var mapCard = document.querySelector('.map__card');
+    var mapPinActive = document.querySelector('.map__pin--active');
+    if (mapCard) {
+      mapCard.remove();
+    }
+    if (mapPinActive) {
+      mapPinActive.classList.remove('map__pin--active');
+    }
+    document.removeEventListener('keydown', window.util.isEscEvent);
+  };
+
+  // Деактивация карты
+  var getMapReset = function () {
+    window.util.mapBlockElement.classList.add('map--faded');
+    window.pin.removePins();
+    closeCard();
+    mapPinMainElement.style.top = MAIN_PIN_TOP + 'px';
+    mapPinMainElement.style.left = MAIN_PIN_LEFT + 'px';
+  };
+
   // Фильтрация объявлений
   var onFilterChange = function () {
     window.filter.filterAllAds(window.adverts.slice(0, PINS_AMOUNT));
@@ -188,7 +212,8 @@
   window.map = {
     renderPins: renderPins,
     mapPinMainElement: mapPinMainElement,
-    clickPins: clickPins
+    clickPins: clickPins,
+    getMapReset: getMapReset
   };
 
 })();

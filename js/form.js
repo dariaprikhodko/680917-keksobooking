@@ -143,6 +143,7 @@
     window.filter.disablemapFiltersElement();
     window.filter.disableFieldsetElement();
     window.filter.disableSelectElement();
+    window.map.getMapReset();
   };
 
   // появление попапа об успешной публикации
