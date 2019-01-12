@@ -152,7 +152,7 @@
         .content
         .querySelector('.success');
     var successElementTemplate = successPopupTemplate.cloneNode(true);
-    mainElement.appendChild(successElement);
+    mainElement.appendChild(successElementTemplate);
     successElementTemplate.addEventListener('click', function () {
       successElementTemplate.classList.add('hidden');
       document.removeEventListener('keydown', window.util.isEscEvent);

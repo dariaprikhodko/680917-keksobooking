@@ -65,26 +65,6 @@
     }
     var cardElement = similarCardTemplate.cloneNode(true);
 
-    cardElement.querySelector('.popup__title').textContent = ads.offer.title;
-    cardElement.querySelector('.popup__text--address').textContent = ads.offer.address;
-    cardElement.querySelector('.popup__text--price').textContent = ads.offer.price + ' ₽/ночь';
-    cardElement.querySelector('.popup__type').textContent = typesOfOffers[ads.offer.type];
-    cardElement.querySelector('.popup__text--capacity').textContent = ads.offer.rooms + ' комнаты для ' + ads.offer.guests + ' гостей';
-    cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + ads.offer.checkin + ',' + ' выезд до ' + ads.offer.checkout;
-    cardElement.querySelector('.popup__features').textContent = '';
-    for (var j = 0; j < ads.offer.features.length; j++) {
-      cardElement.querySelector('.popup__features').innerHTML += '<li class="popup__feature popup__feature--' + ads.offer.features[j] + '"></li>';
-    }
-    cardElement.querySelector('.popup__description').textContent = ads.offer.description;
-    cardElement.querySelector('.popup__type').textContent = typesOfOffers[ads.offer.type];
-    cardElement.querySelector('.popup__photos').textContent = '';
-    for (var f = 0; f < ads.offer.photos.length; f++) {
-      cardElement.querySelector('.popup__photos').insertAdjacentHTML('beforeend', '<img src="' + ads.offer.photos[f] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
-    }
-    cardElement.querySelector('.popup__avatar').src = ads.author.avatar;
-
-    window.util.mapBlockElement.insertBefore(cardElement, filtersContainerElement);
-
     // проверка полей объявлений
     if (ads.offer.title) {
       cardElement.querySelector('.popup__title').textContent = ads.offer.title;
@@ -139,6 +119,29 @@
     } else {
       cardElement.querySelector('.popup__avatar').remove();
     }
+
+    if (ads.offer.type) {
+      cardElement.querySelector('.popup__type').textContent = typesOfOffers[ads.offer.type];
+    } else {
+      cardElement.querySelector('.popup__type').remove();
+    }
+
+    if (ads.offer.features) {
+      cardElement.querySelector('.popup__features').textContent = '';
+      for (var j = 0; j < ads.offer.features.length; j++) {
+        cardElement.querySelector('.popup__features').innerHTML += '<li class="popup__feature popup__feature--' + ads.offer.features[j] + '"></li>';
+      }
+    } else {
+      cardElement.querySelector('.popup__features').remove();
+    }
+
+    cardElement.querySelector('.popup__photos').textContent = '';
+    for (var f = 0; f < ads.offer.photos.length; f++) {
+      cardElement.querySelector('.popup__photos').insertAdjacentHTML('beforeend', '<img src="' + ads.offer.photos[f] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
+    }
+    cardElement.querySelector('.popup__avatar').src = ads.author.avatar;
+
+    window.util.mapBlockElement.insertBefore(cardElement, filtersContainerElement);
 
     // закрываем объявление по щелчку на крестик
     var closeButton = cardElement.querySelector('.popup__close');
