@@ -12,7 +12,5 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  window.showError = {
-    showError: showError
-  };
+  window.showError = showError;
 })();

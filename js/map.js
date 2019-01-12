@@ -13,7 +13,6 @@
     Y: 630 - (MAIN_PIN_SIZE + MAIN_PIN_ARROW)
   };
   var PINS_AMOUNT = 5;
-  var mainElement = document.querySelector('main');
   var mapPinMainElement = document.querySelector('.map__pin--main');
   var isActive = false;
 
@@ -185,44 +184,6 @@
   };
 
   window.filter.mapFiltersElement.addEventListener('change', window.util.debounce(onFilterChange));
-
-  // появление попапа об успешной публикации
-  // находим шаблон и отрисовываем в него попап
-  var renderPopupSuccess = function () {
-    var successPopupTemplate = document.querySelector('#success')
-        .content
-        .querySelector('.success');
-    var successElement = successPopupTemplate.cloneNode(true);
-    mainElement.appendChild(successElement);
-    successElement.addEventListener('click', function () {
-      successElement.classList.add('hidden');
-      document.removeEventListener('keydown', window.util.isEscEvent);
-    });
-    document.addEventListener('keydown', function (evt) {
-      var closePopup = function () {
-        successElement.classList.add('hidden');
-      };
-      window.util.isEscEvent(evt, closePopup);
-    });
-  };
-
-  // вызов попапа
-  window.form.adFormElement.addEventListener('submit', function (evt) {
-    renderPopupSuccess();
-    evt.preventDefault();
-    resetPage();
-  });
-
-  // ресет страницы
-  var resetPage = function () {
-    window.form.adFormElement.reset();
-    window.filter.mapFiltersElement.reset();
-    window.form.onHouseTypeChange();
-    window.form.disableAdFormElement();
-    window.filter.disablemapFiltersElement();
-    window.filter.disableFieldsetElement();
-    window.filter.disableSelectElement();
-  };
 
   window.map = {
     renderPins: renderPins,
