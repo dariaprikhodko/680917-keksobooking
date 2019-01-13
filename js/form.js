@@ -83,6 +83,25 @@
 
   roomNumberField.addEventListener('change', checkRoomGuests);
 
+  // функция, устанавливающая связь между количеством жильцов и комнат
+  var makeRoomsSelected = function (evt) {
+    if (evt.target.value === '1') {
+      capacityOptions[2].selected = true;
+    } else if (evt.target.value === '2') {
+      capacityOptions[1].selected = true;
+    } else if (evt.target.value === '3') {
+      capacityOptions[0].selected = true;
+    } else if (evt.target.value === '100') {
+      capacityOptions[3].selected = true;
+    }
+  };
+
+  roomNumberField.addEventListener('change', makeRoomsSelected);
+
+  var setDefaultCapacity = function () {
+    capacityOptions[2].selected = true;
+  };
+
   // время заезда и выезда
   var syncTimeOut = function () {
     checkInTimeElement.value = checkOutTimeElement.value;
@@ -200,7 +219,8 @@
     setReadOnlyInput: setReadOnlyInput,
     onHouseTypeChange: onHouseTypeChange,
     syncTimeOut: syncTimeOut,
-    syncTimeIn: syncTimeIn
+    syncTimeIn: syncTimeIn,
+    setDefaultCapacity: setDefaultCapacity
   };
 
 })();
