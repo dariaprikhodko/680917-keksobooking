@@ -10,7 +10,8 @@
   var capacityOptions = Array.from(capacityField.options);
   var checkInTimeElement = adFormElement.querySelector('#timein');
   var checkOutTimeElement = adFormElement.querySelector('#timeout');
-  var successElement = document.querySelector('.success');
+  var mainElement = document.querySelector('main');
+  var buttonResetElement = adFormElement.querySelector('.ad-form__reset');
 
   var PriceType = {
     bungalo: 0,
@@ -128,22 +129,64 @@
 
   var onSuccessClose = function (evtDown) {
     window.util.isEscEvent(evtDown, function () {
-      successElement.classList.add('hidden');
       document.removeEventListener('keydown', onSuccessClose);
+    });
+  };
+
+  // ресет страницы
+  var resetPage = function () {
+    window.form.adFormElement.reset();
+    window.filter.mapFiltersElement.reset();
+    window.form.onHouseTypeChange();
+    window.form.disableAdFormElement();
+    window.filter.disablemapFiltersElement();
+    window.filter.disableFieldsetElement();
+    window.filter.disableSelectElement();
+    window.map.getMapReset();
+  };
+
+  // появление попапа об успешной публикации
+  // находим шаблон и отрисовываем в него попап
+  var renderPopupSuccess = function () {
+    var successPopupTemplate = document.querySelector('#success')
+        .content
+        .querySelector('.success');
+    var successElementTemplate = successPopupTemplate.cloneNode(true);
+    mainElement.appendChild(successElementTemplate);
+    successElementTemplate.addEventListener('click', function () {
+      successElementTemplate.classList.add('hidden');
+      document.removeEventListener('keydown', window.util.isEscEvent);
+    });
+    document.addEventListener('keydown', function (evt) {
+      var closePopup = function () {
+        successElementTemplate.classList.add('hidden');
+      };
+      window.util.isEscEvent(evt, closePopup);
     });
   };
 
   adFormElement.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(adFormElement), function () {
-      successElement.classList.remove('hidden');
+      renderPopupSuccess();
       resetAll();
+      resetPage();
 
       adFormElement.querySelector('#description').value = '';
       makeSelected(roomNumberField);
       makeSelected(capacityField);
 
       document.addEventListener('keydown', onSuccessClose);
+      if (!window.map.isActive) {
+        window.map.mapPinMainElement.addEventListener('click', window.map.renderPins);
+      }
     }, window.showError);
+    evt.preventDefault();
+  });
+
+  buttonResetElement.addEventListener('click', function (evt) {
+    resetAll();
+    resetPage();
+    calcCoordsToInputAdress();
     evt.preventDefault();
   });
 
