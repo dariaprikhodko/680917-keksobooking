@@ -10,8 +10,8 @@
   var capacityOptions = Array.from(capacityField.options);
   var checkInTimeElement = adFormElement.querySelector('#timein');
   var checkOutTimeElement = adFormElement.querySelector('#timeout');
-  var successElement = document.querySelector('.success');
   var mainElement = document.querySelector('main');
+  var buttonResetElement = adFormElement.querySelector('.ad-form__reset');
 
   var PriceType = {
     bungalo: 0,
@@ -129,7 +129,6 @@
 
   var onSuccessClose = function (evtDown) {
     window.util.isEscEvent(evtDown, function () {
-      successElement.classList.add('hidden');
       document.removeEventListener('keydown', onSuccessClose);
     });
   };
@@ -160,7 +159,7 @@
     });
     document.addEventListener('keydown', function (evt) {
       var closePopup = function () {
-        successElement.classList.add('hidden');
+        successElementTemplate.classList.add('hidden');
       };
       window.util.isEscEvent(evt, closePopup);
     });
@@ -177,7 +176,22 @@
       makeSelected(capacityField);
 
       document.addEventListener('keydown', onSuccessClose);
+      window.map.mapPinMainElement.addEventListener('click', window.map.renderPins);
     }, window.showError);
+    evt.preventDefault();
+  });
+
+  buttonResetElement.addEventListener('click', function (evt) {
+    resetAll();
+    resetPage();
+    calcCoordsToInputAdress();
+    evt.preventDefault();
+  });
+
+  buttonResetElement.removeEventListener('click', function (evt) {
+    resetAll();
+    resetPage();
+    calcCoordsToInputAdress();
     evt.preventDefault();
   });
 
