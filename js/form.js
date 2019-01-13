@@ -176,19 +176,14 @@
       makeSelected(capacityField);
 
       document.addEventListener('keydown', onSuccessClose);
-      window.map.mapPinMainElement.addEventListener('click', window.map.renderPins);
+      if (!window.map.isActive) {
+        window.map.mapPinMainElement.addEventListener('click', window.map.renderPins);
+      }
     }, window.showError);
     evt.preventDefault();
   });
 
   buttonResetElement.addEventListener('click', function (evt) {
-    resetAll();
-    resetPage();
-    calcCoordsToInputAdress();
-    evt.preventDefault();
-  });
-
-  buttonResetElement.removeEventListener('click', function (evt) {
     resetAll();
     resetPage();
     calcCoordsToInputAdress();

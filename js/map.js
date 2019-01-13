@@ -147,7 +147,7 @@
     // При отпускании мыши страница переходит в активный режим
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      if (!isActive) {
+      if (!window.map.isActive) {
         setActive();
         window.backend.load(successHandler, window.showError);
         window.form.setDefaultGuest();
@@ -213,7 +213,8 @@
     renderPins: renderPins,
     mapPinMainElement: mapPinMainElement,
     clickPins: clickPins,
-    getMapReset: getMapReset
+    getMapReset: getMapReset,
+    isActive: isActive
   };
 
 })();
