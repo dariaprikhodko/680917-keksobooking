@@ -151,6 +151,7 @@
         setActive();
         window.backend.load(successHandler, window.showError);
         window.form.setDefaultGuest();
+        window.form.setDefaultCapacity();
       }
 
       document.removeEventListener('mousemove', onMouseMove);

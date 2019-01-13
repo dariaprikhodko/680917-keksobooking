@@ -98,6 +98,10 @@
 
   roomNumberField.addEventListener('change', makeRoomsSelected);
 
+  var setDefaultCapacity = function () {
+    capacityOptions[2].selected = true;
+  };
+
   // время заезда и выезда
   var syncTimeOut = function () {
     checkInTimeElement.value = checkOutTimeElement.value;
@@ -215,7 +219,8 @@
     setReadOnlyInput: setReadOnlyInput,
     onHouseTypeChange: onHouseTypeChange,
     syncTimeOut: syncTimeOut,
-    syncTimeIn: syncTimeIn
+    syncTimeIn: syncTimeIn,
+    setDefaultCapacity: setDefaultCapacity
   };
 
 })();
