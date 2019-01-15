@@ -15,7 +15,7 @@
     var filteredOffer = adverts.slice(); // копируем входящие данные
 
     // Ключ для сравнения
-    var filterRules = {
+    var FilterRules = {
       'housing-type': 'type',
       'housing-rooms': 'rooms',
       'housing-guests': 'guests'
@@ -56,7 +56,7 @@
       selectElement.forEach(function (item) {
         if (item.value !== 'any') {
           if (item.id !== 'housing-price') {
-            filteredOffer = filterByValue(item, filterRules[item.id]);
+            filteredOffer = filterByValue(item, FilterRules[item.id]);
           } else {
             filteredOffer = filteredByPrice(item);
           }
@@ -69,7 +69,6 @@
         filteredOffer = filteredByFeatures(item);
       });
     }
-
     // Отрисовка отфильтрованных объявлений
     window.pin.removePins();
 
