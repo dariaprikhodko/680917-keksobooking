@@ -75,13 +75,6 @@
       });
     };
 
-    // Фильтрация по удобствам
-    var filteredByFeatures = function (item) {
-      return filteredOffer.filter(function (offerData) {
-        return offerData.offer.features.indexOf(item.value) >= 0;
-      });
-    };
-
     // Перебираем все select
     if (selectElement.length !== null) { // проверка на наличие select
       selectElement.forEach(function (item) {
@@ -95,17 +88,11 @@
       });
     }
     if (featureFilters !== null && featureFilters.length > 0) { // Проверка на наличие checkbox:checked
-      // filteredOffer = filteredOffer.filter((item) => {
-      featureFilters.forEach(function (item) {
+      filteredOffer = filteredOffer.filter(function (item) {
         return filterWiFi(item) && filterDishwasher(item) && filterParking(item) && filterWasher(item) && filterElevator(item) && filterConditioner(item);
       });
     }
 
-    if (featureFilters !== null) { // Проверка на наличие checkbox:checked
-      featureFilters.forEach(function (item) {
-        filteredOffer = filteredByFeatures(item);
-      });
-    }
     // Отрисовка отфильтрованных объявлений
     window.pin.removePins();
 
