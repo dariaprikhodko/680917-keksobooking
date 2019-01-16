@@ -205,7 +205,7 @@
 
   // Фильтрация объявлений
   var onFilterChange = function () {
-    window.filter.filterAllAds(window.adverts.slice(0, PINS_AMOUNT));
+    window.filter.filterAllAds(window.adverts.slice());
   };
 
   window.filter.mapFiltersElement.addEventListener('change', window.util.debounce(onFilterChange));

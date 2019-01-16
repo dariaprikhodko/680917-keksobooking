@@ -9,8 +9,39 @@
   var mapFiltersElement = document.querySelector('.map__filters');
   var selectElement = mapFiltersElement.querySelectorAll('select');
   var featureFilters = mapFiltersElement.querySelectorAll('input[type = checkbox]:checked'); // Все checkbox:checked
+  var wifiFeatureElement = mapFiltersElement.querySelector('#filter-wifi');
+  var dishwasherFeatureElement = mapFiltersElement.querySelector('#filter-dishwasher');
+  var parkingFeatureElement = mapFiltersElement.querySelector('#filter-parking');
+  var washerFeatureElement = mapFiltersElement.querySelector('#filter-washer');
+  var elevatorFeatureElement = mapFiltersElement.querySelector('#filter-elevator');
+  var conditionerFeatureElement = mapFiltersElement.querySelector('#filter-conditioner');
 
   // Функция получения объявлений с выбранными характеристиками
+
+  var filterWiFi = function (element) {
+    return wifiFeatureElement.checked ? element.offer.features.includes(wifiFeatureElement.value) : true;
+  };
+
+  var filterDishwasher = function (element) {
+    return dishwasherFeatureElement.checked ? element.offer.features.includes(dishwasherFeatureElement.value) : true;
+  };
+
+  var filterParking = function (element) {
+    return parkingFeatureElement.checked ? element.offer.features.includes(parkingFeatureElement.value) : true;
+  };
+
+  var filterWasher = function (element) {
+    return washerFeatureElement.checked ? element.offer.features.includes(washerFeatureElement.value) : true;
+  };
+
+  var filterElevator = function (element) {
+    return elevatorFeatureElement.checked ? element.offer.features.includes(elevatorFeatureElement.value) : true;
+  };
+
+  var filterConditioner = function (element) {
+    return conditionerFeatureElement.checked ? element.offer.features.includes(conditionerFeatureElement.value) : true;
+  };
+
   var filterAllAds = function (adverts) {
     var filteredOffer = adverts.slice(); // копируем входящие данные
 
@@ -61,6 +92,12 @@
             filteredOffer = filteredByPrice(item);
           }
         }
+      });
+    }
+    if (featureFilters !== null && featureFilters.length > 0) { // Проверка на наличие checkbox:checked
+      // filteredOffer = filteredOffer.filter((item) => {
+      featureFilters.forEach(function (item) {
+        return filterWiFi(item) && filterDishwasher(item) && filterParking(item) && filterWasher(item) && filterElevator(item) && filterConditioner(item);
       });
     }
 
