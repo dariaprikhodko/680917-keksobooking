@@ -8,7 +8,6 @@
   var fieldsetElement = document.querySelectorAll('fieldset');
   var mapFiltersElement = document.querySelector('.map__filters');
   var selectElement = mapFiltersElement.querySelectorAll('select');
-  var featureFilters = mapFiltersElement.querySelectorAll('input[type = checkbox]:checked'); // Все checkbox:checked
   var wifiFeatureElement = mapFiltersElement.querySelector('#filter-wifi');
   var dishwasherFeatureElement = mapFiltersElement.querySelector('#filter-dishwasher');
   var parkingFeatureElement = mapFiltersElement.querySelector('#filter-parking');
@@ -87,11 +86,9 @@
         }
       });
     }
-    if (featureFilters !== null && featureFilters.length > 0) { // Проверка на наличие checkbox:checked
-      filteredOffer = filteredOffer.filter(function (item) {
-        return filterWiFi(item) && filterDishwasher(item) && filterParking(item) && filterWasher(item) && filterElevator(item) && filterConditioner(item);
-      });
-    }
+    filteredOffer = filteredOffer.filter(function (item) {
+      return filterWiFi(item) && filterDishwasher(item) && filterParking(item) && filterWasher(item) && filterElevator(item) && filterConditioner(item);
+    });
 
     // Отрисовка отфильтрованных объявлений
     window.pin.removePins();
